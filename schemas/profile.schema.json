@@ -98,6 +98,27 @@
         "footer_message": {
           "default": "Built with Astro, Git and too much YAML.",
           "type": "string"
+        },
+        "analytics": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "google_analytics": {
+                  "type": "string",
+                  "pattern": "^G-[A-Z0-9]+$"
+                },
+                "clarity": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9]+$"
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": ["title", "description"],

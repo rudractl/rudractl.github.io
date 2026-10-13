@@ -3,6 +3,7 @@
  * Navigation never depends on it — every command maps to a normal link.
  */
 import { toggleTheme } from './theme.ts';
+import { track } from './analytics.ts';
 
 interface TermData {
   name: string;
@@ -184,6 +185,7 @@ export function initHeroTerminal() {
     print(`<span class="ps1">$</span> <span class="text-fg">${esc(value)}</span>`);
     const [name = '', ...args] = value.replace(/^rudractl\s+/, '').split(/\s+/);
     const cmd = commands[name.toLowerCase()];
+    track('terminal_command', { command: cmd ? name.toLowerCase() : 'unknown' });
     const out = cmd
       ? cmd(args)
       : `command not found: ${esc(name)}. Type <span class="text-accent">help</span>.`;

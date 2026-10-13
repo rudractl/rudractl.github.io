@@ -30,7 +30,7 @@ const links = getSocialLinks();
             {link.id}
           </dt>
           <dd class="min-w-0 truncate">
-            <a href={link.href} class="link">
+            <a href={link.href} class="link" data-track="contact_click" data-track-label={link.id}>
               {link.display}
             </a>
           </dd>

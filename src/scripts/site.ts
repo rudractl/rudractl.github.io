@@ -3,6 +3,9 @@
  * the site works fully without JavaScript.
  */
 import { toggleTheme } from './theme.ts';
+import { initClickTracking } from './analytics.ts';
+
+initClickTracking();
 
 // Theme toggle
 document

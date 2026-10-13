@@ -71,3 +71,13 @@ site:
     Kubernetes, platform engineering and infrastructure automation.
     Open-source projects, engineering notes and lab experiments by Rudradev Pal.
   footer_message: Built with Astro, Git and too much YAML.
+
+  # Free visitor analytics — paste your IDs to switch on, delete to switch off.
+  # Only loaded in production (your `npm run dev` visits are never counted).
+  analytics:
+    # Google Analytics 4 → analytics.google.com → Admin → Data streams → Web
+    # Dashboard + official iOS/Android app ("Google Analytics").
+    google_analytics: G-KXYT8BWQLK
+    # Microsoft Clarity → clarity.microsoft.com → Settings → Overview → Project ID
+    # Heatmaps + session replays.
+    # clarity: abcd1234ef

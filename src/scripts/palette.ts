@@ -4,6 +4,7 @@
  * lazily on first open — zero cost for visitors who never use it.
  */
 import { toggleTheme } from './theme.ts';
+import { track } from './analytics.ts';
 
 interface SearchItem {
   type: 'page' | 'project' | 'post' | 'lab' | 'tag' | 'action';
@@ -141,6 +142,7 @@ export function initPalette() {
 
   const choose = (item: SearchItem | undefined) => {
     if (!item) return;
+    track('palette_select', { type: item.type, title: item.title.slice(0, 80) });
     dialog.close();
     if (item.run) item.run();
     else if (item.url) {

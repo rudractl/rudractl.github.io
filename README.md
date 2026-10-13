@@ -71,6 +71,21 @@ sections.
   as you type using the generated JSON Schemas in `schemas/`.
 - **GitHub stats are automatic** — never write stars or versions by hand.
 
+## Visitor analytics (free, optional)
+
+Paste IDs into `content/profile.yaml` → `site.analytics`; delete them to switch off.
+Scripts load only in production builds, so local dev visits are never counted.
+
+| Provider                                           | Gives you                                                                 |
+| -------------------------------------------------- | ------------------------------------------------------------------------- |
+| [Google Analytics 4](https://analytics.google.com) | dashboard + official iOS/Android app: realtime, sources, countries, pages |
+| [Microsoft Clarity](https://clarity.microsoft.com) | heatmaps, scroll depth, session replays                                   |
+
+Custom events sent automatically: `contact_click` (GitHub / email / LinkedIn),
+`view_source`, `hero_cta`, `terminal_command` (what visitors type in the hero shell)
+and `palette_select` (what they search for). Add `data-track="event_name"` to any
+element to track more.
+
 ## What's in the box
 
 - `/` terminal hero with a once-per-session typing intro and an _optional_ tiny

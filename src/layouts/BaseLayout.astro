@@ -6,6 +6,7 @@ import SEO, { type SEOProps } from '@/components/SEO.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import CommandPalette from '@/components/CommandPalette.astro';
+import Analytics from '@/components/Analytics.astro';
 
 type Props = SEOProps;
 
@@ -24,6 +25,7 @@ const seo = Astro.props;
     <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <SEO {...seo} />
+    <Analytics />
     <script is:inline>
       // Apply the theme before first paint: saved choice → OS preference → dark.
       (() => {

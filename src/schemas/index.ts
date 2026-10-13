@@ -118,6 +118,20 @@ export const profileSchema = z.object({
       title: nonEmpty,
       description: nonEmpty,
       footer_message: z.string().default('Built with Astro, Git and too much YAML.'),
+      /** Optional, free analytics. Leave out to disable. Only loaded in production builds. */
+      analytics: z
+        .object({
+          google_analytics: z
+            .string()
+            .regex(/^G-[A-Z0-9]+$/, 'Expected a GA4 Measurement ID like G-ABC123XYZ.')
+            .optional(),
+          clarity: z
+            .string()
+            .regex(/^[a-z0-9]+$/, 'Expected a Microsoft Clarity project ID like abcd1234ef.')
+            .optional(),
+        })
+        .strict()
+        .nullish(),
     })
     .strict(),
 });

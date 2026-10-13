@@ -80,7 +80,12 @@ const links = [
         {data.long_description ?? data.description}
       </p>
       <div class="mt-6 flex flex-wrap gap-3">
-        <a href={repoUrl(data.repository)} class="btn btn-primary">
+        <a
+          href={repoUrl(data.repository)}
+          class="btn btn-primary"
+          data-track="view_source"
+          data-track-label={project.id}
+        >
           <Icon name="github" size={15} /> View Source
         </a>
         {links.map((l) => (
