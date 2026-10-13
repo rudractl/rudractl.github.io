@@ -1,0 +1,42 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import LabTable from '@/components/lab/LabTable.astro';
+import { getLabs } from '@/lib/content.ts';
+
+const labs = await getLabs();
+const byStatus = labs.reduce<Record<string, number>>(
+  (acc, l) => ((acc[l.data.status] = (acc[l.data.status] ?? 0) + 1), acc),
+  {},
+);
+---
+
+<BaseLayout
+  title="Lab"
+  description="Technical experiments: Kubernetes, networking, GitOps, Terraform and home-lab prototypes."
+>
+  <div class="container-page pt-12 sm:pt-16">
+    <SectionHeading
+      level={1}
+      command="rudractl lab list"
+      title="Lab"
+      description="Experiments that are not quite products — clusters built to be broken, networking deep-dives and infrastructure prototypes."
+    />
+    <ul class="enter mb-6 flex flex-wrap gap-4" aria-label="Summary">
+      {Object.entries(byStatus).map(([status, n]) => (
+        <li class:list={['status', `status-${status}`]}>
+          {n} {status}
+        </li>
+      ))}
+    </ul>
+    <div class="enter" style="--i:1">
+      {labs.length ? (
+        <LabTable labs={labs} />
+      ) : (
+        <p class="card p-8 text-center font-mono text-sm text-muted">
+          No experiments yet. Start one with <code class="text-fg">npm run new lab "Name"</code>.
+        </p>
+      )}
+    </div>
+  </div>
+</BaseLayout>

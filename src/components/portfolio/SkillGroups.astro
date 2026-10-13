@@ -1,0 +1,47 @@
+---
+import type { SkillGroup } from '@/schemas/index.ts';
+
+interface Props {
+  groups: SkillGroup[];
+}
+const { groups } = Astro.props;
+
+const LEVELS = {
+  daily: { label: 'daily', cls: 'bg-accent' },
+  experienced: { label: 'experienced', cls: 'bg-accent-2' },
+  exploring: { label: 'exploring', cls: 'bg-violet' },
+} as const;
+---
+
+<div>
+  <ul class="mb-6 flex flex-wrap gap-4 font-mono text-xs text-muted" aria-label="Legend">
+    {Object.values(LEVELS).map((l) => (
+      <li class="inline-flex items-center gap-2">
+        <span class:list={['size-2 rounded-full', l.cls]} aria-hidden="true" />
+        {l.label}
+      </li>
+    ))}
+  </ul>
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {groups.map((group) => (
+      <section class="card reveal p-5">
+        <h3 class="font-mono text-sm font-medium text-fg">
+          <span class="text-accent">#</span> {group.group}
+        </h3>
+        {group.description && <p class="mt-1 text-sm text-muted">{group.description}</p>}
+        <ul class="mt-4 flex flex-wrap gap-1.5">
+          {group.items.map((item) => (
+            <li class="chip" title={LEVELS[item.level].label}>
+              <span
+                class:list={['size-1.5 rounded-full', LEVELS[item.level].cls]}
+                aria-hidden="true"
+              />
+              {item.name}
+              <span class="sr-only">({LEVELS[item.level].label})</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</div>

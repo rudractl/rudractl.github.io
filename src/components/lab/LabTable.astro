@@ -1,0 +1,54 @@
+---
+import Icon from '../Icon.astro';
+import type { LabEntry } from '@/lib/content.ts';
+
+interface Props {
+  labs: LabEntry[];
+  showTech?: boolean;
+}
+const { labs, showTech = true } = Astro.props;
+---
+
+<div class="card overflow-hidden p-5 sm:p-6">
+  <table class="kube-table">
+    <thead>
+      <tr>
+        <th scope="col">EXPERIMENT</th>
+        {showTech && (
+          <th scope="col" class="hidden md:table-cell">
+            STACK
+          </th>
+        )}
+        <th scope="col" class="w-28 !pr-0">
+          STATUS
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {labs.map((lab) => (
+        <tr class="group">
+          <td>
+            <a
+              href={`/lab/${lab.id}/`}
+              class="inline-flex items-center gap-2 text-fg transition-colors hover:text-accent"
+            >
+              <Icon name="flask" size={14} class="text-muted group-hover:text-accent" />
+              {lab.data.name}
+            </a>
+            <p class="mt-1 font-sans text-[0.8125rem] leading-relaxed text-muted">
+              {lab.data.summary}
+            </p>
+          </td>
+          {showTech && (
+            <td class="hidden text-muted md:table-cell">
+              {lab.data.technologies.slice(0, 3).join(', ')}
+            </td>
+          )}
+          <td class="!pr-0">
+            <span class:list={['status', `status-${lab.data.status}`]}>{lab.data.status}</span>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

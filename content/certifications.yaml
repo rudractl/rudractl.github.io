@@ -1,0 +1,7 @@
+# Optional. Delete entries (or leave the list empty: []) to hide the section.
+# TODO(rudradev): replace with your real certifications.
+- name: Certified Kubernetes Administrator (CKA)
+  issuer: The Linux Foundation / CNCF
+  issued: 2024-03-01
+  expires: 2026-03-01
+  credential_url: null

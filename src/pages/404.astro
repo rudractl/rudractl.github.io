@@ -1,0 +1,43 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import TerminalWindow from '@/components/terminal/TerminalWindow.astro';
+import Icon from '@/components/Icon.astro';
+---
+
+<BaseLayout title="404 — Not Found" description="This page does not exist." noindex>
+  <div class="container-page grid min-h-[60vh] place-items-center py-16">
+    <TerminalWindow title="kubectl — zsh" class="enter w-full max-w-2xl">
+      <p>
+        <span class="ps1">$</span> kubectl get page{' '}
+        <span class="text-fg" data-404-path>
+          /whatever
+        </span>
+      </p>
+      <p class="mt-4 text-error">Error from server (NotFound):</p>
+      <p class="mt-1 text-fg-2">
+        page "<span data-404-path>/whatever</span>" not found
+      </p>
+      <p class="mt-6 text-muted"># maybe it was moved, renamed, or never existed. try:</p>
+      <div class="mt-4 flex flex-wrap gap-3 font-sans">
+        <a href="/" class="btn btn-primary">
+          <Icon name="home" size={15} /> cd /
+        </a>
+        <a href="/opensource/" class="btn">
+          <Icon name="code" size={15} /> Browse Projects
+        </a>
+        <button type="button" class="btn" data-palette-open>
+          <Icon name="search" size={15} /> Search
+        </button>
+      </div>
+      <p class="mt-6">
+        <span class="ps1">$</span> <span class="cursor" aria-hidden="true"></span>
+      </p>
+    </TerminalWindow>
+  </div>
+</BaseLayout>
+
+<script>
+  document
+    .querySelectorAll('[data-404-path]')
+    .forEach((el) => (el.textContent = location.pathname));
+</script>

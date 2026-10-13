@@ -1,0 +1,51 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  command: string;
+  title: string;
+  description?: string | undefined;
+  href?: string;
+  linkLabel?: string;
+  level?: 1 | 2;
+  class?: string;
+}
+
+const {
+  command,
+  title,
+  description,
+  href,
+  linkLabel = 'view all',
+  level = 2,
+  class: className,
+} = Astro.props;
+const H = level === 1 ? 'h1' : 'h2';
+---
+
+<div class:list={['mb-8', className]}>
+  <p class="eyebrow mb-3">
+    <span class="prompt">$</span> {command}
+  </p>
+  <div class="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+    <H
+      class:list={[
+        'font-semibold tracking-tight text-fg',
+        level === 1 ? 'text-3xl sm:text-4xl' : 'text-2xl sm:text-[1.75rem]',
+      ]}
+    >
+      {title}
+    </H>
+    {href && (
+      <a
+        href={href}
+        class="group inline-flex items-center gap-1.5 font-mono text-[0.8125rem] text-muted hover:text-accent"
+      >
+        {linkLabel}
+        <Icon name="arrow" size={14} class="transition-transform group-hover:translate-x-0.5" />
+      </a>
+    )}
+  </div>
+  <div class="section-rule mt-4"></div>
+  {description && <p class="mt-4 max-w-2xl text-fg-2">{description}</p>}
+</div>

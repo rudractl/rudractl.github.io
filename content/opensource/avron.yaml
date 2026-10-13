@@ -1,0 +1,59 @@
+# Stars, forks, latest release, license, language and topics are
+# fetched from GitHub automatically — only write what GitHub can't know.
+
+name: Avron
+slug: avron
+repository: rudractl/avron
+
+description: >
+  Declarative infrastructure automation for bootstrapping
+  container-native environments from a single spec.
+
+long_description: >
+  Avron turns a single YAML spec into a fully provisioned environment —
+  machines, container runtime, Kubernetes and the platform add-ons on top —
+  with plans you can review before anything changes.
+
+featured: true
+status: active
+role: creator
+order: 1
+
+technologies:
+  - Go
+  - Kubernetes
+  - Docker
+
+categories:
+  - devops
+  - infrastructure
+
+links:
+  documentation: null
+  website: null
+
+highlights:
+  - Infrastructure automation
+  - Container-native architecture
+  - Developer-focused tooling
+
+why: |
+  Every environment I built started the same way: a pile of scripts,
+  a wiki page that was already out of date, and a lot of tribal knowledge.
+  Avron is an attempt to make the *whole* bootstrap path declarative —
+  one spec, reviewed in a pull request, applied the same way every time.
+
+architecture: |
+  - **Spec → Plan → Apply.** The spec is parsed and validated, then compiled
+    into an ordered plan of idempotent steps.
+  - **Providers** implement steps for a target (bare metal, VMware, cloud).
+  - **State** is stored next to the spec so drift is visible in Git.
+
+decisions: |
+  - Go for a single static binary that runs anywhere, including air-gapped hosts.
+  - Plans are rendered as human-readable diffs before anything is applied.
+  - No daemon: Avron runs, converges and exits.
+
+learned: |
+  Idempotency is a design constraint, not a feature you add later.
+  Every step has to answer "what if I run this twice?" before it is merged.

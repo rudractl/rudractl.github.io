@@ -1,0 +1,39 @@
+# Grouped skills for /about — no percentage bars, ever.
+# Each item is either a plain name, or { name, level } where level is
+# daily | experienced | exploring.
+
+- group: Platform Engineering
+  description: Running and evolving Kubernetes as a product.
+  items:
+    - { name: Kubernetes, level: daily }
+    - { name: RKE2, level: daily }
+    - { name: Helm, level: daily }
+    - { name: FluxCD, level: experienced }
+    - { name: Cilium, level: exploring }
+
+- group: Infrastructure
+  items:
+    - { name: Terraform, level: experienced }
+    - { name: OpenTofu, level: experienced }
+    - { name: Ansible, level: daily }
+    - { name: VMware, level: experienced }
+
+- group: Containers
+  items:
+    - { name: Docker, level: daily }
+    - { name: containerd, level: experienced }
+    - { name: Harbor, level: experienced }
+
+- group: Systems
+  items:
+    - { name: Linux, level: daily }
+    - { name: Networking, level: experienced }
+    - { name: Storage, level: experienced }
+    - { name: eBPF, level: exploring }
+
+- group: Development
+  items:
+    - { name: Go, level: experienced }
+    - { name: Python, level: experienced }
+    - { name: Bash, level: daily }
+    - { name: TypeScript, level: exploring }

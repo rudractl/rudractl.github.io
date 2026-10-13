@@ -1,0 +1,31 @@
+---
+interface Props {
+  title?: string;
+  class?: string;
+  bodyClass?: string;
+  as?: 'div' | 'section' | 'figure';
+  style?: string;
+}
+const {
+  title = 'rudra@platform: ~',
+  class: className,
+  bodyClass,
+  as: Tag = 'div',
+  style,
+} = Astro.props;
+---
+
+<Tag class:list={['term', className]} style={style}>
+  <div class="term-bar">
+    <div class="term-dots" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <span class="truncate">{title}</span>
+    <slot name="bar" />
+  </div>
+  <div class:list={['term-body', bodyClass]}>
+    <slot />
+  </div>
+</Tag>

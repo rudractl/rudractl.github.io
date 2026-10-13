@@ -1,0 +1,80 @@
+import { getCollection, type CollectionEntry } from 'astro:content';
+import readingTime from 'reading-time';
+import { getRepoMeta, type RepoMeta } from './github.ts';
+
+/** Drafts are visible in `npm run dev` and never shipped to production. */
+const SHOW_DRAFTS = !import.meta.env.PROD;
+
+export type PostEntry = CollectionEntry<'blog'> & { minutes: number };
+export type ProjectEntry = CollectionEntry<'opensource'> & { meta: RepoMeta | undefined };
+export type LabEntry = CollectionEntry<'lab'>;
+
+export const hasBody = (entry: { body?: string | undefined }) => Boolean(entry.body?.trim());
+
+/* ─────────────── Blog ─────────────── */
+
+export async function getPosts(): Promise<PostEntry[]> {
+  const posts = await getCollection('blog', (p) => SHOW_DRAFTS || p.data.status === 'published');
+  return posts
+    .map((p) => ({
+      ...p,
+      minutes:
+        p.data.reading_time === 'auto'
+          ? Math.max(1, Math.round(readingTime(p.body ?? '').minutes))
+          : p.data.reading_time,
+    }))
+    .sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
+}
+
+export async function getTags(): Promise<{ tag: string; slug: string; count: number }[]> {
+  const counts = new Map<string, number>();
+  for (const post of await getPosts()) {
+    for (const tag of post.data.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+  }
+  return [...counts]
+    .map(([tag, count]) => ({ tag, slug: tagSlug(tag), count }))
+    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+}
+
+export const tagSlug = (tag: string) =>
+  tag
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+/* ─────────────── Open source ─────────────── */
+
+const statusRank = { active: 0, experimental: 1, maintenance: 2, archived: 3 } as const;
+
+export async function getProjects(): Promise<ProjectEntry[]> {
+  const projects = await getCollection('opensource');
+  return projects
+    .map((p) => ({ ...p, meta: getRepoMeta(p.data.repository) }))
+    .sort(
+      (a, b) =>
+        Number(b.data.featured) - Number(a.data.featured) ||
+        a.data.order - b.data.order ||
+        statusRank[a.data.status] - statusRank[b.data.status] ||
+        a.data.name.localeCompare(b.data.name),
+    );
+}
+
+/* ─────────────── Lab ─────────────── */
+
+const labRank = { active: 0, complete: 1, paused: 2, planned: 3 } as const;
+
+export async function getLabs(): Promise<LabEntry[]> {
+  const labs = await getCollection('lab');
+  return labs.sort(
+    (a, b) =>
+      labRank[a.data.status] - labRank[b.data.status] ||
+      (b.data.started?.valueOf() ?? 0) - (a.data.started?.valueOf() ?? 0) ||
+      a.data.name.localeCompare(b.data.name),
+  );
+}
+
+/* ─────────────── Cross references ─────────────── */
+
+export async function getPostsForProject(slug: string) {
+  return (await getPosts()).filter((p) => p.data.projects.includes(slug));
+}

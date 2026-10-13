@@ -1,0 +1,51 @@
+---
+import Icon from '../Icon.astro';
+import { formatCount, type RepoMeta } from '@/lib/github.ts';
+
+interface Props {
+  meta: RepoMeta | undefined;
+  compact?: boolean;
+  class?: string;
+}
+const { meta, compact = false, class: className } = Astro.props;
+---
+
+{meta ? (
+  <ul
+    class:list={[
+      'flex flex-wrap items-center gap-x-4 gap-y-1.5 font-mono text-xs text-muted',
+      className,
+    ]}
+    aria-label="Repository statistics"
+  >
+    <li class="inline-flex items-center gap-1.5" title="Stars">
+      <Icon name="star" size={13} />
+      <span class="text-fg-2">{formatCount(meta.stars)}</span>
+      <span class="sr-only">stars</span>
+    </li>
+    <li class="inline-flex items-center gap-1.5" title="Forks">
+      <Icon name="fork" size={13} />
+      <span class="text-fg-2">{formatCount(meta.forks)}</span>
+      <span class="sr-only">forks</span>
+    </li>
+    {meta.latestRelease && (
+      <li class="inline-flex items-center gap-1.5" title="Latest release">
+        <Icon name="release" size={13} />
+        <span class="text-fg-2">{meta.latestRelease.tag}</span>
+      </li>
+    )}
+    {!compact && meta.language && (
+      <li class="inline-flex items-center gap-1.5" title="Primary language">
+        <span class="size-2 rounded-full bg-accent-2" aria-hidden="true" />
+        {meta.language}
+      </li>
+    )}
+  </ul>
+) : (
+  <p
+    class:list={['font-mono text-xs text-muted', className]}
+    title="Repository metadata temporarily unavailable."
+  >
+    {compact ? 'stats unavailable' : 'Repository metadata temporarily unavailable.'}
+  </p>
+)}

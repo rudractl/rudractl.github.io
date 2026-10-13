@@ -1,0 +1,73 @@
+# ─────────────────────────────────────────────────────────────
+#  Who you are. Everything on the site that talks about "me"
+#  reads from this file. Edit, commit, push — done.
+# ─────────────────────────────────────────────────────────────
+
+name: Rudradev Pal
+handle: rudractl
+role: Platform & Infrastructure Engineer
+tagline: >
+  I build Kubernetes platforms, infrastructure automation
+  and reliable distributed systems.
+
+location: India
+availability: Open to interesting platform engineering conversations
+
+# Short intro (homepage + about hero)
+intro: >
+  I enjoy building reliable infrastructure, Kubernetes platforms and
+  automation that makes infrastructure easier to operate.
+
+# Longer narrative for /about. Markdown is supported.
+summary: |
+  Most of my work lives in the layer between application teams and the
+  machines they run on. I design and operate **Kubernetes platforms**, write
+  the automation that provisions them, and spend a lot of time thinking about
+  how to make that layer boring — in the best possible way.
+
+  I care about declarative configuration, reproducible builds and systems
+  that explain themselves when they fail. If a task is done twice, I want it
+  in Git; if it is done three times, I want it automated.
+
+  Outside of work I run a home lab, break clusters on purpose, and write
+  about what I learn along the way.
+
+# Shown as `> item` lines in the homepage terminal
+focus:
+  - Kubernetes
+  - Platform Engineering
+  - Infrastructure
+  - Automation
+
+# "Current engineering interests" on the homepage
+interests:
+  - title: Kubernetes internals
+    description: Controllers, scheduling, upgrades and what really happens during a rollout.
+    icon: k8s
+  - title: Platform engineering
+    description: Golden paths, self-service infrastructure and developer experience.
+    icon: layers
+  - title: GitOps
+    description: Flux, declarative delivery and treating Git as the control plane.
+    icon: git
+  - title: Networking
+    description: eBPF, Cilium, service meshes and debugging packets at 2am.
+    icon: network
+  - title: Air-gapped systems
+    description: Shipping clusters to places the internet cannot reach.
+    icon: shield
+  - title: Infrastructure as code
+    description: Terraform / OpenTofu modules and Ansible that age well.
+    icon: code
+
+contact:
+  github: rudractl
+  # linkedin: your-linkedin-handle
+  email: ________@example.com
+
+site:
+  title: Rudradev Pal — Platform & Infrastructure Engineer
+  description: >
+    Kubernetes, platform engineering and infrastructure automation.
+    Open-source projects, engineering notes and lab experiments by Rudradev Pal.
+  footer_message: Built with Astro, Git and too much YAML.

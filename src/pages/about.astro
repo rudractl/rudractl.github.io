@@ -1,0 +1,158 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import TerminalWindow from '@/components/terminal/TerminalWindow.astro';
+import Prompt from '@/components/terminal/Prompt.astro';
+import ExperienceTimeline from '@/components/portfolio/ExperienceTimeline.astro';
+import SkillGroups from '@/components/portfolio/SkillGroups.astro';
+import ContactBlock from '@/components/portfolio/ContactBlock.astro';
+import Icon from '@/components/Icon.astro';
+import {
+  getCertifications,
+  getEducation,
+  getExperience,
+  getProfile,
+  getSkills,
+} from '@/lib/data.ts';
+import { renderMarkdown } from '@/lib/markdown.ts';
+import { formatDate } from '@/lib/format.ts';
+
+const profile = getProfile();
+const experience = getExperience();
+const education = getEducation();
+const certifications = getCertifications();
+const skills = getSkills();
+const summary = await renderMarkdown(profile.summary);
+const now = new Date();
+---
+
+<BaseLayout
+  title="About"
+  description={`${profile.name} — ${profile.role}. ${profile.intro.trim()}`}
+  type="profile"
+>
+  <div class="container-page pt-12 sm:pt-16">
+    <!-- Hero -->
+    <section class="grid items-start gap-10 lg:grid-cols-[1fr_1.1fr]">
+      <TerminalWindow title="profile — zsh" class="enter">
+        <Prompt command="rudractl profile" short="profile" />
+        <h1 class="mt-5 font-sans text-3xl font-semibold tracking-tight text-fg sm:text-4xl">
+          {profile.name}
+        </h1>
+        <p class="mt-2 font-sans text-lg text-accent">{profile.role}</p>
+        <p class="mt-4 font-sans leading-relaxed text-fg-2">{profile.intro}</p>
+        <dl class="mt-5 grid grid-cols-[6rem_1fr] gap-y-2 text-[0.8125rem]">
+          {profile.location && (
+            <>
+              <dt class="text-muted">location</dt>
+              <dd>{profile.location}</dd>
+            </>
+          )}
+          {profile.availability && (
+            <>
+              <dt class="text-muted">status</dt>
+              <dd class="text-accent">{profile.availability}</dd>
+            </>
+          )}
+        </dl>
+      </TerminalWindow>
+      <div class="enter" style="--i:1">
+        <p class="eyebrow mb-4">
+          <span class="prompt">$</span> cat README.md
+        </p>
+        <div class="prose prose-site" set:html={summary} />
+      </div>
+    </section>
+
+    <!-- Skills -->
+    {skills.length > 0 && (
+      <section class="mt-24">
+        <SectionHeading
+          command="rudractl skills --grouped"
+          title="Skills & Technologies"
+          description="Grouped by area. No percentage bars — just how often I work with each."
+        />
+        <SkillGroups groups={skills} />
+      </section>
+    )}
+
+    <!-- Experience -->
+    {experience.length > 0 && (
+      <section class="mt-24">
+        <SectionHeading command="rudractl history --timeline" title="Experience" />
+        <ExperienceTimeline items={experience} />
+      </section>
+    )}
+
+    <!-- Education & certifications -->
+    {(education.length > 0 || certifications.length > 0) && (
+      <section class="mt-24 grid gap-12 lg:grid-cols-2">
+        {education.length > 0 && (
+          <div>
+            <SectionHeading command="rudractl education" title="Education" />
+            <ul class="space-y-4">
+              {education.map((e) => (
+                <li class="card reveal flex gap-4 p-5">
+                  <Icon name="school" size={18} class="mt-0.5 text-accent" />
+                  <div>
+                    <h3 class="font-semibold text-fg">
+                      {e.degree}
+                      {e.field && <span class="font-normal text-fg-2"> · {e.field}</span>}
+                    </h3>
+                    <p class="mt-1 text-sm text-fg-2">{e.institution}</p>
+                    {(e.start || e.end) && (
+                      <p class="mt-1 font-mono text-xs text-muted">
+                        {e.start} — {e.end}
+                      </p>
+                    )}
+                    {e.notes && <p class="mt-2 text-sm text-muted">{e.notes}</p>}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {certifications.length > 0 && (
+          <div>
+            <SectionHeading command="rudractl certs" title="Certifications" />
+            <ul class="space-y-4">
+              {certifications.map((c) => {
+                const expired = c.expires ? c.expires < now : false;
+                return (
+                  <li class="card reveal flex gap-4 p-5">
+                    <Icon name="award" size={18} class="mt-0.5 text-accent" />
+                    <div class="min-w-0 flex-1">
+                      <h3 class="font-semibold text-fg">
+                        {c.credential_url ? (
+                          <a class="link" href={c.credential_url}>
+                            {c.name}
+                          </a>
+                        ) : (
+                          c.name
+                        )}
+                      </h3>
+                      <p class="mt-1 text-sm text-fg-2">{c.issuer}</p>
+                      <p class="mt-1 font-mono text-xs text-muted">
+                        issued {formatDate(c.issued)}
+                        {c.expires && (
+                          <span class={expired ? 'text-warning' : ''}>
+                            {' '}
+                            · {expired ? 'expired' : 'valid until'} {formatDate(c.expires)}
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+      </section>
+    )}
+
+    <section class="mt-24">
+      <ContactBlock />
+    </section>
+  </div>
+</BaseLayout>

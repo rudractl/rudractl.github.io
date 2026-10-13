@@ -1,0 +1,51 @@
+---
+import type { Experience } from '@/schemas/index.ts';
+
+interface Props {
+  items: Experience;
+  limit?: number;
+}
+const { items, limit } = Astro.props;
+const shown = limit ? items.slice(0, limit) : items;
+const fmt = (v: string | number) => String(v);
+---
+
+<ol class="timeline space-y-10">
+  {shown.map((job) => (
+    <li class="reveal relative">
+      <span
+        class:list={['timeline-dot', job.end === 'present' && 'is-current']}
+        aria-hidden="true"
+      />
+      <p class="font-mono text-xs text-muted">
+        {fmt(job.start)} —{' '}
+        {job.end === 'present' ? <span class="text-accent">present</span> : fmt(job.end)}
+        {job.location && <span> · {job.location}</span>}
+      </p>
+      <h3 class="mt-1.5 text-lg font-semibold tracking-tight text-fg">
+        {job.role} <span class="font-normal text-muted">@</span>{' '}
+        <span class="text-fg-2">{job.company}</span>
+      </h3>
+      <p class="mt-2 max-w-2xl leading-relaxed text-fg-2">{job.summary}</p>
+      {job.highlights.length > 0 && (
+        <ul class="mt-3 max-w-2xl space-y-1.5 text-[0.9375rem] text-fg-2">
+          {job.highlights.map((h) => (
+            <li class="flex gap-2.5">
+              <span class="mt-[0.15rem] font-mono text-accent" aria-hidden="true">
+                ›
+              </span>
+              {h}
+            </li>
+          ))}
+        </ul>
+      )}
+      {job.areas.length > 0 && (
+        <ul class="mt-3 flex flex-wrap gap-1.5" aria-label="Areas">
+          {job.areas.map((a) => (
+            <li class="chip">{a}</li>
+          ))}
+        </ul>
+      )}
+    </li>
+  ))}
+</ol>

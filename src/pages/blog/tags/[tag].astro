@@ -1,0 +1,37 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import ArticleRow from '@/components/blog/ArticleRow.astro';
+import Icon from '@/components/Icon.astro';
+import { getPosts, getTags, tagSlug, type PostEntry } from '@/lib/content.ts';
+
+export async function getStaticPaths() {
+  const [posts, tags] = await Promise.all([getPosts(), getTags()]);
+  return tags.map(({ tag, slug }) => ({
+    params: { tag: slug },
+    props: { tag, posts: posts.filter((p) => p.data.tags.some((t) => tagSlug(t) === slug)) },
+  }));
+}
+
+const { tag, posts } = Astro.props as { tag: string; posts: PostEntry[] };
+---
+
+<BaseLayout title={`#${tag}`} description={`Posts tagged ${tag}.`}>
+  <div class="container-page pt-12 sm:pt-16">
+    <a
+      href="/blog/"
+      class="mb-8 inline-flex items-center gap-1.5 font-mono text-xs text-muted hover:text-fg"
+    >
+      <Icon name="arrow-left" size={13} /> cd ../blog
+    </a>
+    <SectionHeading
+      level={1}
+      command={`rudractl blog list --tag "${tag}"`}
+      title={`#${tag}`}
+      description={`${posts.length} ${posts.length === 1 ? 'post' : 'posts'}`}
+    />
+    {posts.map((post) => (
+      <ArticleRow post={post} headingLevel="h2" />
+    ))}
+  </div>
+</BaseLayout>

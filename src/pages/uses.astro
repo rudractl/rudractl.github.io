@@ -1,0 +1,36 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { getUses } from '@/lib/data.ts';
+
+const groups = getUses();
+---
+
+<BaseLayout title="Uses" description="The tools, technologies and setup I use every day.">
+  <div class="container-page pt-12 sm:pt-16">
+    <SectionHeading
+      level={1}
+      command="rudractl uses"
+      title="Uses"
+      description="The tools and technologies I reach for — at work, in the lab and at my desk."
+    />
+    <div class="columns-1 gap-5 sm:columns-2 lg:columns-3">
+      {groups.map((group, i) => (
+        <section class="card enter mb-5 break-inside-avoid p-5" style={`--i:${i}`}>
+          <h2 class="font-mono text-sm font-medium text-fg">
+            <span class="text-accent">#</span> {group.group}
+          </h2>
+          <div class="mt-3 h-px bg-border" />
+          <ul class="mt-3 space-y-2.5">
+            {group.items.map((item) => (
+              <li class="flex flex-col">
+                <span class="text-fg">{item.name}</span>
+                {item.note && <span class="font-mono text-xs text-muted">// {item.note}</span>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

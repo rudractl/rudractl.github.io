@@ -1,0 +1,35 @@
+# /uses — tools I reach for. Items are names, or { name, note }.
+
+- group: Infrastructure
+  items:
+    - Kubernetes
+    - RKE2
+    - { name: Terraform / OpenTofu, note: modules over copy-paste }
+    - Ansible
+    - Helm
+    - { name: FluxCD, note: GitOps all the things }
+
+- group: Containers
+  items:
+    - Docker
+    - containerd
+    - { name: Harbor, note: private registry for air-gapped installs }
+
+- group: Systems
+  items:
+    - Linux
+    - { name: Rocky Linux, note: default server distro }
+
+- group: Development
+  items:
+    - Go
+    - Python
+    - Bash
+
+- group: Daily Environment
+  items:
+    - macOS
+    - { name: VS Code, note: with the Kubernetes and YAML extensions }
+    - Git
+    - { name: zsh, note: + starship prompt }
+    - { name: k9s, note: the best way to look at a cluster }

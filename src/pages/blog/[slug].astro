@@ -1,0 +1,183 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+import TableOfContents from '@/components/blog/TableOfContents.astro';
+import ProjectCard from '@/components/opensource/ProjectCard.astro';
+import { getPosts, getProjects, tagSlug, type PostEntry } from '@/lib/content.ts';
+import { formatDate, isoDate } from '@/lib/format.ts';
+import { editUrl } from '@/lib/site.ts';
+import { getProfile } from '@/lib/data.ts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    // posts are newest-first: "next" is newer, "prev" is older
+    props: { post, newer: posts[i - 1], older: posts[i + 1], all: posts },
+  }));
+}
+
+interface Props {
+  post: PostEntry;
+  newer?: PostEntry | undefined;
+  older?: PostEntry | undefined;
+  all: PostEntry[];
+}
+const { post, newer, older, all } = Astro.props;
+const { data } = post;
+const { Content, headings } = await render(post);
+const profile = getProfile();
+
+const projects = (await getProjects()).filter((p) => data.projects.includes(p.id));
+const series = data.series
+  ? all
+      .filter((p) => p.data.series === data.series)
+      .sort((a, b) => a.data.published.valueOf() - b.data.published.valueOf())
+  : [];
+const url = new URL(`/blog/${post.id}/`, Astro.site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: data.title,
+  description: data.description.trim(),
+  datePublished: data.published.toISOString(),
+  dateModified: (data.updated ?? data.published).toISOString(),
+  author: { '@type': 'Person', name: profile.name, url: Astro.site?.toString() },
+  keywords: data.tags.join(', '),
+  url: url.toString(),
+  mainEntityOfPage: url.toString(),
+  image: new URL(`/og/blog/${post.id}.png`, Astro.site).toString(),
+};
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description.trim()}
+  type="article"
+  image={`/og/blog/${post.id}.png`}
+  published={data.published}
+  updated={data.updated}
+  tags={data.tags}
+  noindex={data.status === 'draft'}
+  jsonLd={jsonLd}
+>
+  <div class="container-page pt-12 sm:pt-16">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_14rem]">
+      <article class="min-w-0">
+        <a
+          href="/blog/"
+          class="enter mb-8 inline-flex items-center gap-1.5 font-mono text-xs text-muted hover:text-fg"
+        >
+          <Icon name="arrow-left" size={13} /> cd ../blog
+        </a>
+
+        <header class="enter max-w-[70ch]" style="--i:1">
+          {data.status === 'draft' && <p class="chip mb-4 !text-warning">draft — not published</p>}
+          <h1 class="text-3xl leading-tight font-semibold tracking-tight sm:text-[2.6rem]">
+            {data.title}
+          </h1>
+          <p class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.8125rem] text-muted">
+            <time datetime={isoDate(data.published)}>{formatDate(data.published)}</time>
+            <span aria-hidden="true">·</span>
+            <span>{post.minutes} min read</span>
+            {data.updated && (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>
+                  updated <time datetime={isoDate(data.updated)}>{formatDate(data.updated)}</time>
+                </span>
+              </>
+            )}
+          </p>
+          <ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Tags">
+            {data.tags.map((tag) => (
+              <li>
+                <a class="chip" href={`/blog/tags/${tagSlug(tag)}/`}>
+                  #{tag}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div class="section-rule mt-8"></div>
+        </header>
+
+        {series.length > 1 && (
+          <nav class="card mt-8 max-w-[70ch] p-5" aria-label="Series">
+            <p class="eyebrow mb-3">
+              <span class="prompt">▸</span> Series: {data.series}
+            </p>
+            <ol class="list-inside list-decimal space-y-1.5 text-sm">
+              {series.map((p) => (
+                <li class={p.id === post.id ? 'text-accent' : 'text-fg-2'}>
+                  {p.id === post.id ? (
+                    p.data.title
+                  ) : (
+                    <a class="link" href={`/blog/${p.id}/`}>
+                      {p.data.title}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
+
+        <div class="prose prose-site enter mt-10" style="--i:2">
+          <Content />
+        </div>
+
+        <footer class="mt-16 max-w-[70ch] space-y-10">
+          {projects.length > 0 && (
+            <section>
+              <h2 class="eyebrow mb-4">
+                <span class="prompt">▸</span> Related open source
+              </h2>
+              <div class="grid gap-4">
+                {projects.map((p) => (
+                  <ProjectCard project={p} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          <div class="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6 font-mono text-xs text-muted">
+            <span>Thanks for reading. Found a typo?</span>
+            {editUrl(post.filePath) && (
+              <a
+                class="inline-flex items-center gap-1.5 hover:text-fg"
+                href={editUrl(post.filePath)}
+              >
+                <Icon name="github" size={13} /> edit this page on GitHub
+              </a>
+            )}
+          </div>
+
+          <nav class="grid gap-4 sm:grid-cols-2" aria-label="More posts">
+            {older ? (
+              <a href={`/blog/${older.id}/`} class="card card-interactive block p-4">
+                <span class="font-mono text-xs text-muted">← older</span>
+                <span class="mt-1 block font-medium text-fg">{older.data.title}</span>
+              </a>
+            ) : (
+              <span />
+            )}
+            {newer && (
+              <a href={`/blog/${newer.id}/`} class="card card-interactive block p-4 text-right">
+                <span class="font-mono text-xs text-muted">newer →</span>
+                <span class="mt-1 block font-medium text-fg">{newer.data.title}</span>
+              </a>
+            )}
+          </nav>
+        </footer>
+      </article>
+
+      <aside class="hidden lg:block">
+        <div class="sticky top-24 pt-28">
+          <TableOfContents headings={headings} />
+        </div>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,197 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+import ArticleRow from '@/components/blog/ArticleRow.astro';
+import { getPostsForProject, getProjects, hasBody, type ProjectEntry } from '@/lib/content.ts';
+import { formatCount, repoUrl } from '@/lib/github.ts';
+import { renderMarkdown } from '@/lib/markdown.ts';
+import { timeAgo } from '@/lib/format.ts';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props as { project: ProjectEntry };
+const { data, meta } = project;
+
+const { Content } = hasBody(project) ? await render(project) : { Content: null };
+const sections = (
+  await Promise.all(
+    (
+      [
+        ['Why I built it', data.why],
+        ['Architecture', data.architecture],
+        ['Technical decisions', data.decisions],
+        ['What I learned', data.learned],
+      ] as const
+    ).map(async ([title, md]) => ({ title, html: await renderMarkdown(md) })),
+  )
+).filter((s) => s.html);
+const related = await getPostsForProject(project.id);
+
+const describe: [string, string | undefined][] = [
+  ['Repository', data.repository],
+  ['Status', data.status],
+  ['Role', data.role],
+  ['Tech', data.technologies.join(' / ') || undefined],
+  ['Language', meta?.language ?? undefined],
+  ['License', meta?.license ?? undefined],
+  ['Updated', meta?.pushedAt ? timeAgo(meta.pushedAt) : undefined],
+];
+const links = [
+  data.links.documentation && {
+    href: data.links.documentation,
+    label: 'Documentation',
+    icon: 'docs' as const,
+  },
+  (data.links.website ?? meta?.homepage) && {
+    href: (data.links.website ?? meta?.homepage)!,
+    label: 'Website',
+    icon: 'globe' as const,
+  },
+].filter((l): l is { href: string; label: string; icon: 'docs' | 'globe' } => Boolean(l));
+---
+
+<BaseLayout
+  title={data.name}
+  description={data.description.trim()}
+  image={`/og/opensource/${project.id}.png`}
+>
+  <article class="container-page pt-12 sm:pt-16">
+    <a
+      href="/opensource/"
+      class="enter mb-8 inline-flex items-center gap-1.5 font-mono text-xs text-muted hover:text-fg"
+    >
+      <Icon name="arrow-left" size={13} /> cd ../opensource
+    </a>
+
+    <header class="enter" style="--i:1">
+      <p class="eyebrow mb-3">
+        <span class="prompt">$</span> rudractl project describe {project.id}
+      </p>
+      <div class="flex flex-wrap items-center gap-3">
+        <h1 class="text-4xl font-semibold tracking-tight uppercase sm:text-5xl">{data.name}</h1>
+        <span class:list={['status', `status-${data.status}`]}>{data.status}</span>
+      </div>
+      <div class="section-rule mt-5"></div>
+      <p class="mt-5 max-w-3xl text-lg leading-relaxed text-fg-2">
+        {data.long_description ?? data.description}
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href={repoUrl(data.repository)} class="btn btn-primary">
+          <Icon name="github" size={15} /> View Source
+        </a>
+        {links.map((l) => (
+          <a href={l.href} class="btn">
+            <Icon name={l.icon} size={15} /> {l.label}
+          </a>
+        ))}
+      </div>
+    </header>
+
+    <div class="mt-14 grid gap-12 lg:grid-cols-[1fr_20rem]">
+      <div class="min-w-0">
+        {data.highlights.length > 0 && (
+          <section class="mb-12">
+            <h2 class="eyebrow mb-4">
+              <span class="prompt">▸</span> Highlights
+            </h2>
+            <ul class="grid gap-3 sm:grid-cols-2">
+              {data.highlights.map((h) => (
+                <li class="card flex gap-3 p-4 text-sm text-fg-2">
+                  <Icon name="sparkle" size={15} class="mt-0.5 text-accent" />
+                  {h}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <div class="prose prose-site">
+          {sections.map((s) => (
+            <section>
+              <h2>{s.title}</h2>
+              <Fragment set:html={s.html} />
+            </section>
+          ))}
+          {Content && <Content />}
+        </div>
+
+        {related.length > 0 && (
+          <section class="mt-16">
+            <h2 class="eyebrow mb-5">
+              <span class="prompt">▸</span> Related writing
+            </h2>
+            {related.map((post) => (
+              <ArticleRow post={post} />
+            ))}
+          </section>
+        )}
+      </div>
+
+      <aside class="lg:sticky lg:top-24 lg:self-start">
+        <div class="term">
+          <div class="term-bar">
+            <span>describe</span>
+          </div>
+          <dl class="grid grid-cols-[6rem_1fr] gap-x-3 gap-y-3 p-5 font-mono text-[0.8125rem]">
+            {describe
+              .filter(([, v]) => v)
+              .map(([k, v]) => (
+                <>
+                  <dt class="text-muted">{k}</dt>
+                  <dd class="min-w-0 break-words text-fg">{v}</dd>
+                </>
+              ))}
+          </dl>
+          <div class="border-t border-border p-5">
+            <p class="mb-3 font-mono text-xs text-muted">GitHub</p>
+            {meta ? (
+              <dl class="grid grid-cols-2 gap-3 font-mono text-sm">
+                <div class="rounded-lg bg-bg-2 p-3">
+                  <dt class="text-xs text-muted">★ stars</dt>
+                  <dd class="mt-1 text-lg text-fg">{formatCount(meta.stars)}</dd>
+                </div>
+                <div class="rounded-lg bg-bg-2 p-3">
+                  <dt class="text-xs text-muted">⑂ forks</dt>
+                  <dd class="mt-1 text-lg text-fg">{formatCount(meta.forks)}</dd>
+                </div>
+                <div class="rounded-lg bg-bg-2 p-3">
+                  <dt class="text-xs text-muted">watchers</dt>
+                  <dd class="mt-1 text-lg text-fg">{formatCount(meta.watchers)}</dd>
+                </div>
+                <div class="rounded-lg bg-bg-2 p-3">
+                  <dt class="text-xs text-muted">issues</dt>
+                  <dd class="mt-1 text-lg text-fg">{formatCount(meta.openIssues)}</dd>
+                </div>
+                {meta.latestRelease && (
+                  <div class="col-span-2 rounded-lg bg-bg-2 p-3">
+                    <dt class="text-xs text-muted">latest release</dt>
+                    <dd class="mt-1">
+                      <a class="link text-fg" href={meta.latestRelease.url}>
+                        {meta.latestRelease.tag}
+                      </a>
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            ) : (
+              <p class="font-mono text-xs text-muted">
+                Repository metadata temporarily unavailable.
+              </p>
+            )}
+            {meta && meta.topics.length > 0 && (
+              <ul class="mt-4 flex flex-wrap gap-1.5">
+                {meta.topics.map((t) => (
+                  <li class="chip">{t}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,50 @@
+---
+import Icon from '../Icon.astro';
+import { formatDate, isoDate, plainText } from '@/lib/format.ts';
+import type { PostEntry } from '@/lib/content.ts';
+import { tagSlug } from '@/lib/content.ts';
+
+interface Props {
+  post: PostEntry;
+  /** Include searchable text + tag data attributes for client-side filtering */
+  filterable?: boolean;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { post, filterable = false, headingLevel: H = 'h3' } = Astro.props;
+const { data } = post;
+const href = `/blog/${post.id}/`;
+const isDraft = data.status === 'draft';
+const searchText = filterable
+  ? `${data.title} ${data.description} ${data.tags.join(' ')} ${plainText(post.body).slice(0, 4000)}`.toLowerCase()
+  : undefined;
+---
+
+<article
+  class="group relative grid gap-2 border-b border-dashed border-border py-6 first:pt-0 last:border-0 sm:grid-cols-[8.5rem_1fr] sm:gap-6"
+  data-post={filterable ? '' : undefined}
+  data-tags={filterable ? data.tags.map(tagSlug).join(' ') : undefined}
+  data-search={searchText}
+>
+  <div class="flex items-center gap-3 font-mono text-xs text-muted sm:flex-col sm:items-start sm:gap-1.5 sm:pt-1">
+    <time datetime={isoDate(data.published)}>{formatDate(data.published)}</time>
+    <span class="inline-flex items-center gap-1">
+      <Icon name="clock" size={12} /> {post.minutes} min read
+    </span>
+  </div>
+  <div>
+    <H class="text-lg font-semibold tracking-tight text-fg sm:text-xl">
+      <a href={href} class="transition-colors after:absolute after:inset-0 group-hover:text-accent">
+        {data.title}
+      </a>
+      {isDraft && <span class="chip ml-2 align-middle !text-warning">draft</span>}
+      {data.featured && (
+        <span class="ml-2 align-middle font-mono text-xs text-accent" title="Featured">
+          ★
+        </span>
+      )}
+    </H>
+    <p class="mt-1.5 font-mono text-xs text-muted">{data.tags.join(' · ')}</p>
+    <p class="mt-2.5 max-w-2xl leading-relaxed text-fg-2">{data.description}</p>
+  </div>
+</article>

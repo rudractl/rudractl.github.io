@@ -1,0 +1,106 @@
+---
+import Icon from './Icon.astro';
+import { NAV } from '@/lib/site.ts';
+import { getProfile } from '@/lib/data.ts';
+
+const { handle } = getProfile();
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header
+  class="site-header sticky top-0 z-50 border-b border-transparent transition-colors duration-200 data-[scrolled]:border-border data-[scrolled]:bg-bg/75 data-[scrolled]:backdrop-blur-xl"
+  data-header
+>
+  <div class="container-page flex h-16 items-center gap-4">
+    <a
+      href="/"
+      class="group flex items-center gap-2 font-mono text-[0.95rem] font-semibold tracking-tight"
+      aria-label="Home"
+    >
+      <span
+        class="grid size-7 place-items-center rounded-md border border-border-strong bg-surface text-accent transition-colors group-hover:border-accent/50"
+        aria-hidden="true"
+      >
+        <Icon name="terminal" size={15} />
+      </span>
+      <span>{handle}</span>
+    </a>
+
+    <nav aria-label="Primary" class="ml-auto hidden md:block">
+      <ul class="flex items-center gap-1 font-mono text-[0.8125rem]">
+        {NAV.map(({ href, label }) => (
+          <li>
+            <a
+              href={href}
+              aria-current={isActive(href) ? 'page' : undefined}
+              class="rounded-md px-2.5 py-1.5 text-muted transition-colors hover:bg-surface-hover hover:text-fg aria-[current=page]:text-fg"
+            >
+              <span class="text-accent/70">~/</span>
+              {label === 'home' ? '' : label}
+              {label === 'home' && <span class="sr-only">home</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="ml-auto flex items-center gap-1.5 md:ml-2">
+      <button
+        type="button"
+        data-palette-open
+        class="flex h-9 items-center gap-2 rounded-lg border border-border bg-surface px-2.5 font-mono text-xs text-muted transition-colors hover:border-border-strong hover:text-fg"
+        aria-label="Search and commands"
+        aria-keyshortcuts="Control+K Meta+K"
+      >
+        <Icon name="search" size={14} />
+        <span class="hidden lg:inline">search</span>
+        <kbd class="kbd hidden sm:inline" data-mod-key>
+          Ctrl K
+        </kbd>
+      </button>
+      <button
+        type="button"
+        data-theme-toggle
+        class="grid size-9 place-items-center rounded-lg border border-border bg-surface text-muted transition-colors hover:border-border-strong hover:text-fg"
+        aria-label="Toggle colour theme"
+      >
+        <Icon name="sun" size={15} class="hidden dark:block" />
+        <Icon name="moon" size={15} class="block dark:hidden" />
+      </button>
+      <button
+        type="button"
+        popovertarget="mobile-nav"
+        class="grid size-9 place-items-center rounded-lg border border-border bg-surface text-muted hover:text-fg md:hidden"
+        aria-label="Open menu"
+      >
+        <Icon name="menu" size={16} />
+      </button>
+    </div>
+  </div>
+
+  <nav
+    id="mobile-nav"
+    popover
+    aria-label="Mobile"
+    class="m-0 mt-16 w-full max-w-none border-b border-border bg-bg/95 p-0 backdrop-blur-xl md:hidden"
+  >
+    <ul class="container-page grid gap-1 py-4 font-mono text-sm">
+      {NAV.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            aria-current={isActive(href) ? 'page' : undefined}
+            class="flex items-center justify-between rounded-lg px-3 py-3 text-fg-2 hover:bg-surface-hover aria-[current=page]:bg-surface aria-[current=page]:text-fg"
+          >
+            <span>
+              <span class="text-accent">~/</span>
+              {label === 'home' ? '' : label}
+            </span>
+            <Icon name="arrow" size={14} class="text-muted" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>

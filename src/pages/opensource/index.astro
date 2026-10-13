@@ -1,0 +1,65 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import ProjectCard from '@/components/opensource/ProjectCard.astro';
+import { getProjects } from '@/lib/content.ts';
+
+const projects = await getProjects();
+const featured = projects.filter((p) => p.data.featured);
+const others = projects.filter((p) => !p.data.featured);
+const categories = [...new Set(projects.flatMap((p) => p.data.categories))].sort();
+---
+
+<BaseLayout
+  title="Open Source"
+  description="Things I build, maintain and experiment with in public."
+>
+  <div class="container-page pt-12 sm:pt-16">
+    <SectionHeading
+      level={1}
+      command="rudractl projects --opensource"
+      title="Open Source"
+      description="Things I build, maintain and experiment with in public. Repository stats are pulled from GitHub at build time."
+    />
+
+    {categories.length > 1 && (
+      <ul class="enter mb-10 flex flex-wrap gap-2" aria-label="Categories">
+        {categories.map((c) => (
+          <li class="chip">#{c}</li>
+        ))}
+      </ul>
+    )}
+
+    {featured.length > 0 && (
+      <section class="mb-14">
+        <h2 class="eyebrow mb-5">
+          <span class="prompt">▸</span> Featured
+        </h2>
+        <div class="grid gap-5 md:grid-cols-2">
+          {featured.map((project, i) => (
+            <ProjectCard project={project} class="enter" style={`--i:${i}`} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {others.length > 0 && (
+      <section>
+        <h2 class="eyebrow mb-5">
+          <span class="prompt">▸</span> More projects
+        </h2>
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {others.map((project) => (
+            <ProjectCard project={project} class="reveal" />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {projects.length === 0 && (
+      <p class="card p-8 text-center font-mono text-sm text-muted">
+        No projects yet. Add one with <code class="text-fg">npm run new project owner/repo</code>.
+      </p>
+    )}
+  </div>
+</BaseLayout>

@@ -1,0 +1,34 @@
+# Professional timeline — newest first.
+# `end` can be a year (2025), a month (2025-06) or `present`.
+# TODO(rudradev): replace these entries with your real roles.
+
+- company: Independent / Open Source
+  role: Platform Engineer
+  start: 2024
+  end: present
+  summary: >
+    Building Kubernetes platforms, infrastructure automation and
+    developer tooling — and writing about it in public.
+  areas:
+    - Kubernetes
+    - Platform Engineering
+    - Infrastructure Automation
+  highlights:
+    - Designed air-gapped RKE2 clusters with private registries and offline upgrades
+    - GitOps delivery with FluxCD across multiple environments
+    - Reusable OpenTofu modules and Ansible roles for bare-metal and VMware
+
+- company: Infrastructure Team
+  role: DevOps Engineer
+  start: 2022
+  end: 2024
+  summary: >
+    Owned CI/CD, container platforms and Linux infrastructure for
+    product teams shipping to production every day.
+  areas:
+    - CI/CD
+    - Containers
+    - Linux
+  highlights:
+    - Moved services from VMs to containers and then to Kubernetes
+    - Built shared pipelines that cut build times significantly

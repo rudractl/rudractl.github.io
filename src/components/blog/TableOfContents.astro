@@ -1,0 +1,47 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+const headings = Astro.props.headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+{headings.length > 1 && (
+  <nav aria-label="Table of contents" class="font-mono text-[0.8125rem]" data-toc>
+    <p class="mb-3 text-xs tracking-wider text-muted uppercase">On this page</p>
+    <ul class="space-y-2 border-l border-border">
+      {headings.map((h) => (
+        <li>
+          <a
+            href={`#${h.slug}`}
+            class:list={[
+              '-ml-px block border-l border-transparent text-muted transition-colors hover:text-fg data-[active]:border-accent data-[active]:text-accent',
+              h.depth === 3 ? 'pl-6' : 'pl-3',
+            ]}
+          >
+            {h.text.replace(/#$/, '')}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<script>
+  // Highlight the section currently in view
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-toc] a')];
+  const targets = links
+    .map((a) => document.getElementById(decodeURIComponent(a.hash.slice(1))))
+    .filter((el): el is HTMLElement => !!el);
+  if (targets.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          links.forEach((a) => a.toggleAttribute('data-active', a.hash === `#${entry.target.id}`));
+        }
+      },
+      { rootMargin: '-15% 0px -70% 0px' },
+    );
+    targets.forEach((t) => observer.observe(t));
+  }
+</script>

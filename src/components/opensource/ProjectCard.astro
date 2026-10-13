@@ -1,0 +1,67 @@
+---
+import Icon from '../Icon.astro';
+import GitHubStats from './GitHubStats.astro';
+import { repoUrl } from '@/lib/github.ts';
+import type { ProjectEntry } from '@/lib/content.ts';
+
+interface Props {
+  project: ProjectEntry;
+  class?: string;
+  style?: string;
+}
+const { project, class: className, style } = Astro.props;
+const { data, meta } = project;
+const href = `/opensource/${project.id}/`;
+---
+
+<article
+  class:list={['card card-interactive flex h-full flex-col p-5 sm:p-6', className]}
+  style={style}
+>
+  <div class="flex items-start justify-between gap-3">
+    <div class="flex items-center gap-2.5">
+      <span
+        class="grid size-9 place-items-center rounded-lg border border-border bg-bg-2 text-accent"
+        aria-hidden="true"
+      >
+        <Icon name="folder" size={16} />
+      </span>
+      <div>
+        <h3 class="text-lg font-semibold tracking-tight text-fg">
+          <a href={href} class="card-link focus:outline-none">
+            {data.name}
+          </a>
+        </h3>
+        <p class="font-mono text-[0.7rem] text-muted">{data.repository}</p>
+      </div>
+    </div>
+    <span class:list={['status', `status-${data.status}`]}>{data.status}</span>
+  </div>
+
+  <p class="mt-4 flex-1 text-[0.9375rem] leading-relaxed text-fg-2">{data.description}</p>
+
+  {data.technologies.length > 0 && (
+    <ul class="mt-4 flex flex-wrap gap-1.5" aria-label="Technologies">
+      {data.technologies.map((t) => (
+        <li class="chip">{t}</li>
+      ))}
+    </ul>
+  )}
+
+  <div class="mt-5 flex items-center justify-between gap-3 border-t border-dashed border-border pt-4">
+    <GitHubStats meta={meta} compact />
+    <div class="raise flex shrink-0 items-center gap-3 font-mono text-xs">
+      <a
+        href={repoUrl(data.repository)}
+        class="inline-flex items-center gap-1 text-muted hover:text-fg"
+        aria-label={`${data.name} on GitHub`}
+      >
+        <Icon name="github" size={14} />
+        <span class="hidden sm:inline">GitHub</span>
+      </a>
+      <span class="inline-flex items-center gap-1 text-accent" aria-hidden="true">
+        details <Icon name="arrow" size={13} />
+      </span>
+    </div>
+  </div>
+</article>

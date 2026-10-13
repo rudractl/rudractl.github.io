@@ -1,0 +1,76 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon from '@/components/Icon.astro';
+import { getLabs, hasBody, type LabEntry } from '@/lib/content.ts';
+import { renderMarkdown } from '@/lib/markdown.ts';
+import { formatDate } from '@/lib/format.ts';
+import { editUrl } from '@/lib/site.ts';
+import { repoUrl } from '@/lib/github.ts';
+
+export async function getStaticPaths() {
+  return (await getLabs()).map((lab) => ({ params: { slug: lab.id }, props: { lab } }));
+}
+
+const { lab } = Astro.props as { lab: LabEntry };
+const { data } = lab;
+const { Content } = hasBody(lab) ? await render(lab) : { Content: null };
+const notes = await renderMarkdown(data.notes);
+const repo = data.repository
+  ? data.repository.startsWith('http')
+    ? data.repository
+    : repoUrl(data.repository)
+  : null;
+---
+
+<BaseLayout title={data.name} description={data.summary.trim()} image={`/og/lab/${lab.id}.png`}>
+  <article class="container-page pt-12 sm:pt-16">
+    <a
+      href="/lab/"
+      class="enter mb-8 inline-flex items-center gap-1.5 font-mono text-xs text-muted hover:text-fg"
+    >
+      <Icon name="arrow-left" size={13} /> cd ../lab
+    </a>
+    <header class="enter max-w-3xl" style="--i:1">
+      <p class="eyebrow mb-3">
+        <span class="prompt">$</span> rudractl lab describe {lab.id}
+      </p>
+      <div class="flex flex-wrap items-center gap-3">
+        <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">{data.name}</h1>
+        <span class:list={['status', `status-${data.status}`]}>{data.status}</span>
+      </div>
+      <p class="mt-4 text-lg leading-relaxed text-fg-2">{data.summary}</p>
+      <div class="mt-5 flex flex-wrap items-center gap-2">
+        {data.technologies.map((t) => (
+          <span class="chip">{t}</span>
+        ))}
+        {data.started && (
+          <span class="ml-1 font-mono text-xs text-muted">started {formatDate(data.started)}</span>
+        )}
+      </div>
+      {repo && (
+        <a href={repo} class="btn mt-6">
+          <Icon name="github" size={15} /> Source
+        </a>
+      )}
+      <div class="section-rule mt-8"></div>
+    </header>
+
+    {notes || Content ? (
+      <div class="prose prose-site enter mt-10" style="--i:2">
+        {notes && <Fragment set:html={notes} />}
+        {Content && <Content />}
+      </div>
+    ) : (
+      <p class="mt-10 font-mono text-sm text-muted">Write-up coming soon.</p>
+    )}
+
+    {editUrl(lab.filePath) && (
+      <p class="mt-16 max-w-[70ch] border-t border-border pt-6 font-mono text-xs text-muted">
+        <a class="inline-flex items-center gap-1.5 hover:text-fg" href={editUrl(lab.filePath)}>
+          <Icon name="github" size={13} /> edit this page on GitHub
+        </a>
+      </p>
+    )}
+  </article>
+</BaseLayout>

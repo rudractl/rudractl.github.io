@@ -1,0 +1,249 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HeroTerminal from '@/components/terminal/HeroTerminal.astro';
+import TerminalWindow from '@/components/terminal/TerminalWindow.astro';
+import Prompt from '@/components/terminal/Prompt.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import ProjectCard from '@/components/opensource/ProjectCard.astro';
+import ArticleRow from '@/components/blog/ArticleRow.astro';
+import LabTable from '@/components/lab/LabTable.astro';
+import ContactBlock from '@/components/portfolio/ContactBlock.astro';
+import Icon, { type IconName } from '@/components/Icon.astro';
+import { getExperience, getProfile, getSkills } from '@/lib/data.ts';
+import { getLabs, getPosts, getProjects } from '@/lib/content.ts';
+import { formatDate } from '@/lib/format.ts';
+
+const profile = getProfile();
+const [projects, posts, labs] = await Promise.all([getProjects(), getPosts(), getLabs()]);
+const current = getExperience().find((e) => e.end === 'present');
+const exploring = getSkills()
+  .flatMap((g) => g.items)
+  .filter((i) => i.level === 'exploring')
+  .map((i) => i.name);
+
+// The homepage aggregates — it never owns content.
+const featuredProjects = (
+  projects.some((p) => p.data.featured) ? projects.filter((p) => p.data.featured) : projects
+).slice(0, 3);
+const latestPosts = posts.slice(0, 3);
+const selectedLabs = [
+  ...labs.filter((l) => l.data.featured),
+  ...labs.filter((l) => !l.data.featured),
+].slice(0, 4);
+const latestPost = posts[0];
+const totalStars = projects.reduce((n, p) => n + (p.meta?.stars ?? 0), 0);
+
+const resources = [
+  {
+    kind: 'opensource',
+    count: projects.length,
+    href: '/opensource/',
+    status: `${projects.filter((p) => p.data.status === 'active').length} active`,
+  },
+  {
+    kind: 'posts',
+    count: posts.length,
+    href: '/blog/',
+    status: latestPost ? `latest ${formatDate(latestPost.data.published)}` : '—',
+  },
+  {
+    kind: 'labs',
+    count: labs.length,
+    href: '/lab/',
+    status: `${labs.filter((l) => l.data.status === 'active').length} running`,
+  },
+];
+
+const interestIcons = new Set<IconName>([
+  'k8s',
+  'layers',
+  'git',
+  'network',
+  'shield',
+  'code',
+  'terminal',
+  'globe',
+  'wrench',
+]);
+const iconFor = (name?: string): IconName =>
+  name && interestIcons.has(name as IconName) ? (name as IconName) : 'sparkle';
+const firstParagraph = profile.summary.split(/\n\s*\n/)[0]?.replace(/\*\*/g, '') ?? '';
+---
+
+<BaseLayout>
+  <!-- ───────────── Hero ───────────── -->
+  <section class="container-page pt-10 pb-20 sm:pt-16" aria-label="Introduction">
+    <div class="grid items-start gap-6 lg:grid-cols-[1.45fr_1fr]">
+      <HeroTerminal />
+
+      <div class="grid gap-6">
+        <TerminalWindow title="kubectl — status" class="enter" style="--i:2">
+          <Prompt command="rudractl get all" short="get all" />
+          <table class="kube-table mt-3">
+            <thead>
+              <tr>
+                <th scope="col">RESOURCE</th>
+                <th scope="col">COUNT</th>
+                <th scope="col" class="!pr-0">
+                  STATUS
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {resources.map((r) => (
+                <tr>
+                  <td>
+                    <a class="text-fg hover:text-accent" href={r.href}>
+                      {r.kind}
+                    </a>
+                  </td>
+                  <td class="text-accent">{r.count}</td>
+                  <td class="!pr-0 text-muted">{r.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {totalStars > 0 && (
+            <p class="mt-3 text-xs text-muted">★ {totalStars} stars across public repos</p>
+          )}
+        </TerminalWindow>
+
+        <div class="card enter p-5" style="--i:3">
+          <p class="eyebrow">
+            <span class="prompt">#</span> now
+          </p>
+          <ul class="mt-3 space-y-3 text-sm text-fg-2">
+            {current && (
+              <li class="flex gap-3">
+                <Icon name="user" size={15} class="mt-0.5 text-accent" />
+                <span>
+                  {current.role} <span class="text-muted">@ {current.company}</span>
+                </span>
+              </li>
+            )}
+            {latestPost && (
+              <li class="flex gap-3">
+                <Icon name="book" size={15} class="mt-0.5 text-accent" />
+                <a class="link" href={`/blog/${latestPost.id}/`}>
+                  {latestPost.data.title}
+                </a>
+              </li>
+            )}
+            {exploring.length > 0 && (
+              <li class="flex gap-3">
+                <Icon name="flask" size={15} class="mt-0.5 text-accent" />
+                <span>
+                  Exploring <span class="text-fg">{exploring.join(', ')}</span>
+                </span>
+              </li>
+            )}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── Featured open source ───────────── -->
+  {featuredProjects.length > 0 && (
+    <section class="container-page py-14">
+      <SectionHeading
+        command="rudractl projects --featured"
+        title="Featured Open Source"
+        href="/opensource/"
+        linkLabel="all projects"
+      />
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {featuredProjects.map((project) => (
+          <ProjectCard project={project} class="reveal" />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ───────────── Latest writing ───────────── -->
+  {latestPosts.length > 0 && (
+    <section class="container-page py-14">
+      <SectionHeading
+        command="rudractl blog list --limit 3"
+        title="Latest Writing"
+        href="/blog/"
+        linkLabel="all posts"
+      />
+      <div class="reveal">
+        {latestPosts.map((post) => (
+          <ArticleRow post={post} />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ───────────── Interests ───────────── -->
+  {profile.interests.length > 0 && (
+    <section class="container-page py-14">
+      <SectionHeading command="cat ~/.interests" title="Current Engineering Interests" />
+      <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {profile.interests.map((interest) => (
+          <li class="card card-interactive reveal p-5">
+            <span
+              class="grid size-9 place-items-center rounded-lg border border-border bg-bg-2 text-accent"
+              aria-hidden="true"
+            >
+              <Icon name={iconFor(interest.icon)} size={17} />
+            </span>
+            <h3 class="mt-4 font-semibold tracking-tight text-fg">{interest.title}</h3>
+            <p class="mt-1.5 text-sm leading-relaxed text-fg-2">{interest.description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <!-- ───────────── Lab ───────────── -->
+  {selectedLabs.length > 0 && (
+    <section class="container-page py-14">
+      <SectionHeading
+        command="rudractl lab list"
+        title="Selected Lab Work"
+        href="/lab/"
+        linkLabel="all experiments"
+      />
+      <div class="reveal">
+        <LabTable labs={selectedLabs} />
+      </div>
+    </section>
+  )}
+
+  <!-- ───────────── About preview ───────────── -->
+  <section class="container-page py-14">
+    <SectionHeading
+      command="rudractl profile"
+      title="About"
+      href="/about/"
+      linkLabel="full profile"
+    />
+    <div class="reveal grid gap-8 lg:grid-cols-[1.4fr_1fr]">
+      <p class="text-lg leading-relaxed text-fg-2">{firstParagraph}</p>
+      <dl class="card grid grid-cols-[6.5rem_1fr] gap-y-3 p-5 font-mono text-[0.8125rem]">
+        <dt class="text-muted">name</dt>
+        <dd>{profile.name}</dd>
+        <dt class="text-muted">role</dt>
+        <dd>{profile.role}</dd>
+        {profile.location && (
+          <>
+            <dt class="text-muted">location</dt>
+            <dd>{profile.location}</dd>
+          </>
+        )}
+        <dt class="text-muted">focus</dt>
+        <dd class="text-accent">{profile.focus.join(' · ')}</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ───────────── Contact ───────────── -->
+  <section class="container-page py-14">
+    <div class="reveal">
+      <ContactBlock />
+    </div>
+  </section>
+</BaseLayout>

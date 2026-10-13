@@ -1,0 +1,27 @@
+---
+/** A single prompt line: `rudra@platform:~$ <command>`. Shortens on mobile. */
+interface Props {
+  command: string;
+  short?: string;
+  path?: string;
+  class?: string;
+}
+const { command, short, path = '~', class: className } = Astro.props;
+---
+
+<p class:list={['font-mono', className]}>
+  <span class="hidden sm:inline">
+    <span class="ps1">rudra@platform</span>
+    <span class="text-muted">:</span>
+    <span class="ps1-path">{path}</span>
+  </span>
+  <span class="ps1">$&nbsp;</span>
+  {short ? (
+    <>
+      <span class="text-fg sm:hidden">{short}</span>
+      <span class="hidden text-fg sm:inline">{command}</span>
+    </>
+  ) : (
+    <span class="text-fg">{command}</span>
+  )}
+</p>
