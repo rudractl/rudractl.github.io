@@ -53,6 +53,9 @@
         "type": "string"
       }
     },
-    "required": ["institution", "degree"]
+    "required": [
+      "institution",
+      "degree"
+    ]
   }
 }

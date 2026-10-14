@@ -9,6 +9,7 @@ import {
   getUses,
 } from '@/lib/data.ts';
 import { getSocialLinks } from '@/lib/site.ts';
+import { getAvatar } from '@/lib/github.ts';
 
 export const GET: APIRoute = () => {
   const { site: _site, contact: _contact, ...profile } = getProfile();
@@ -20,5 +21,6 @@ export const GET: APIRoute = () => {
     certifications: getCertifications(),
     skills: getSkills(),
     uses: getUses(),
+    avatar: getAvatar(),
   });
 };

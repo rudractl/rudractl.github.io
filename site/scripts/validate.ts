@@ -19,6 +19,12 @@ import {
   rel,
   ROOT,
 } from './lib/content.ts';
+import { readGithubCache } from '../src/lib/github-cache.ts';
+import {
+  buildProjectList,
+  labRepositories,
+  parseProjectsFile,
+} from '../src/lib/projects-source.ts';
 
 type Issue = { file: string; messages: string[] };
 const errors: Issue[] = [];
@@ -52,14 +58,43 @@ for (const [name, schema] of Object.entries(dataFiles)) {
   }
 }
 
-/* 2 ── lists (projects.yaml, lab.yaml) ───────────────────── */
-const ids: Record<string, Set<string>> = { 'projects.yaml': new Set(), 'lab.yaml': new Set() };
-const github = (() => {
-  const f = path.join(ROOT, 'src/generated/github.json');
-  return fs.existsSync(f)
-    ? (JSON.parse(fs.readFileSync(f, 'utf8')) as Record<string, { description?: string | null }>)
-    : {};
-})();
+/* 2 ── projects: GitHub discovery + projects.yaml details ── */
+const projectIds = new Set<string>();
+{
+  const file = path.join(CONTENT, 'projects.yaml');
+  if (fs.existsSync(file)) {
+    const cfg = parseProjectsFile(fs.readFileSync(file, 'utf8'));
+    const cache = readGithubCache(path.join(ROOT, 'src/generated/github.json'));
+    const list = buildProjectList(cfg, cache, labRepositories(CONTENT));
+    const seen = new Map<string, string>();
+    const messages: string[] = [];
+    const notes: string[] = [];
+    for (const p of list) {
+      const id = projectId(p as { repository: string; slug?: string });
+      const dupe = seen.get(id);
+      if (dupe)
+        messages.push(
+          `${c.bold(p.repository)} and ${c.bold(dupe)} both map to "${id}" — add a unique \`slug:\`.`,
+        );
+      seen.set(id, p.repository);
+      projectIds.add(id);
+      if (!p['description'] && !cache.repos[p.repository.toLowerCase()]?.description)
+        notes.push(
+          `${p.repository}: no description here or on GitHub — set the repo's About on GitHub, or add \`description:\`.`,
+        );
+    }
+    if (messages.length) errors.push({ file: rel(file), messages });
+    console.log(
+      c.dim(
+        `  → ${list.length} projects will be shown (${Object.keys(cache.repos).length} repos known from GitHub)`,
+      ),
+    );
+    if (notes.length) warnings.push({ file: rel(file), messages: notes });
+  }
+}
+
+/* 3 ── lists (lab.yaml) ───────────────────────────────────── */
+const ids: Record<string, Set<string>> = { 'lab.yaml': new Set() };
 
 for (const [name, schema] of Object.entries(listFiles)) {
   const file = path.join(CONTENT, name);
@@ -94,28 +129,17 @@ for (const [name, schema] of Object.entries(listFiles)) {
       name?: string;
       description?: string;
     };
-    const id =
-      name === 'projects.yaml'
-        ? projectId(data as { repository: string })
-        : labId(data as { name: string });
+    const id = labId(data as { name: string });
     if (ids[name]!.has(id))
       messages.push(`${c.bold(`[${who}]`)} duplicate id "${id}" — add a unique \`slug:\`.`);
     ids[name]!.add(id);
-    if (
-      name === 'projects.yaml' &&
-      !data.description &&
-      !github[data.repository!.toLowerCase()]?.description
-    )
-      notes.push(
-        `[${who}] has no description here or on GitHub — add \`description:\` (or set the repo's About on GitHub).`,
-      );
   });
   if (messages.length) errors.push({ file: label, messages });
   else pass(label, c.dim(` (${list.length} entries)`));
   if (notes.length) warnings.push({ file: label, messages: notes });
 }
 
-/* 3 ── blog posts (one file each) ────────────────────────── */
+/* 4 ── blog posts (one file each) ────────────────────────── */
 const postIds = new Map<string, string>();
 const postRefs: { file: string; refs: string[] }[] = [];
 for (const file of collectionFiles('blog', collections.blog.extensions)) {
@@ -143,20 +167,20 @@ for (const file of collectionFiles('blog', collections.blog.extensions)) {
   }
 }
 
-/* 4 ── cross references ──────────────────────────────────── */
+/* 5 ── cross references ──────────────────────────────────── */
 for (const { file, refs } of postRefs) {
-  const missing = refs.filter((r) => !ids['projects.yaml']!.has(r));
+  const missing = refs.filter((r) => !projectIds.has(r));
   if (missing.length)
     errors.push({
       file,
       messages: missing.map(
         (m) =>
-          `projects: "${m}" is not in content/projects.yaml (known: ${[...ids['projects.yaml']!].join(', ') || 'none'}).`,
+          `projects: "${m}" is not a project on the site (known: ${[...projectIds].join(', ') || 'none'}).`,
       ),
     });
 }
 
-/* 5 ── report ────────────────────────────────────────────── */
+/* 6 ── report ────────────────────────────────────────────── */
 for (const w of warnings) {
   console.log(`\n${c.yellow('!')} ${w.file}`);
   for (const m of w.messages) console.log(`  ${c.yellow(m)}`);

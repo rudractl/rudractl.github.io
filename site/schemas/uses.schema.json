@@ -28,12 +28,17 @@
                   "type": "string"
                 }
               },
-              "required": ["name"]
+              "required": [
+                "name"
+              ]
             }
           ]
         }
       }
     },
-    "required": ["group", "items"]
+    "required": [
+      "group",
+      "items"
+    ]
   }
 }

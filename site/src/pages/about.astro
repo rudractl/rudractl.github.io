@@ -36,10 +36,8 @@ const now = new Date();
     <section class="grid items-start gap-10 lg:grid-cols-[1fr_1.1fr]">
       <TerminalWindow title="profile — zsh" class="enter">
         <Prompt command="rudractl profile" short="profile" />
-        <h1 class="mt-5 font-sans text-3xl font-semibold tracking-tight text-fg sm:text-4xl">
-          {profile.name}
-        </h1>
-        <p class="mt-2 font-sans text-lg text-accent">{profile.role}</p>
+        <h1 class="mt-5 text-3xl font-bold text-fg sm:text-4xl">{profile.name}</h1>
+        <p class="mt-2 font-heading text-lg text-accent">{profile.role}</p>
         <p class="mt-4 font-sans leading-relaxed text-fg-2">{profile.intro}</p>
         <dl class="mt-5 grid grid-cols-[6rem_1fr] gap-y-2 text-[0.8125rem]">
           {profile.location && (

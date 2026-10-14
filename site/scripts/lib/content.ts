@@ -62,13 +62,3 @@ export function postId(file: string, data: unknown): string {
     .replace(/\.[^.]+$/, '')
     .toLowerCase();
 }
-
-/** Repositories listed in content/projects.yaml. */
-export function listedRepositories(): string[] {
-  const file = path.join(CONTENT, 'projects.yaml');
-  if (!fs.existsSync(file)) return [];
-  const list = (readYaml(file) ?? []) as { repository?: unknown }[];
-  return list
-    .map((p) => p.repository)
-    .filter((r): r is string => typeof r === 'string' && r.includes('/'));
-}

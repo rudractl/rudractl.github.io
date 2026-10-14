@@ -19,7 +19,10 @@
     "status": {
       "default": "published",
       "type": "string",
-      "enum": ["draft", "published"]
+      "enum": [
+        "draft",
+        "published"
+      ]
     },
     "tags": {
       "default": [],
@@ -30,7 +33,10 @@
       }
     },
     "series": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "featured": {
       "default": false,
@@ -65,5 +71,9 @@
       "format": "uri"
     }
   },
-  "required": ["title", "description", "published"]
+  "required": [
+    "title",
+    "description",
+    "published"
+  ]
 }

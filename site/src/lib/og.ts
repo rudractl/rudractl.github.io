@@ -31,6 +31,12 @@ const loadFonts = () =>
       weight: 400,
       style: 'normal',
     },
+    {
+      name: 'JetBrains Mono',
+      data: font('@fontsource/jetbrains-mono', 'jetbrains-mono-latin-700-normal.woff'),
+      weight: 700,
+      style: 'normal',
+    },
   ]);
 
 type Node = { type: string; props: Record<string, unknown> & { children?: unknown } };
@@ -64,7 +70,7 @@ const C = {
 const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, s.lastIndexOf(' ', n))}…` : s);
 
 export async function renderOgImage(card: OgCard): Promise<Buffer> {
-  const titleSize = card.title.length > 70 ? 50 : card.title.length > 40 ? 60 : 72;
+  const titleSize = card.title.length > 70 ? 40 : card.title.length > 40 ? 48 : 60;
 
   const tree = h(
     'div',
@@ -127,11 +133,12 @@ export async function renderOgImage(card: OgCard): Promise<Buffer> {
               h(
                 'div',
                 {
+                  fontFamily: 'JetBrains Mono',
                   fontSize: titleSize,
                   fontWeight: 700,
                   color: C.text,
                   lineHeight: 1.12,
-                  letterSpacing: '-0.025em',
+                  letterSpacing: '-0.03em',
                   maxWidth: 960,
                 },
                 card.title,
@@ -151,7 +158,11 @@ export async function renderOgImage(card: OgCard): Promise<Buffer> {
                 (card.tags ?? []).slice(0, 4).join('  •  '),
               ),
               h('div', { flexDirection: 'column', alignItems: 'flex-end', gap: 4 }, [
-                h('div', { fontSize: 28, fontWeight: 700, color: C.text }, card.author),
+                h(
+                  'div',
+                  { fontFamily: 'JetBrains Mono', fontSize: 26, fontWeight: 700, color: C.text },
+                  card.author,
+                ),
                 h(
                   'div',
                   { fontFamily: 'JetBrains Mono', fontSize: 18, color: C.accent },

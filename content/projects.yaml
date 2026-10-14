@@ -2,18 +2,35 @@
 # ─────────────────────────────────────────────────────────────────────────────
 #  Open-source projects → /opensource
 #
-#  The ONLY required field is `repository`. Everything else is optional:
-#    name, description  → taken from GitHub if you leave them out
-#    stars, forks, release, license, language, topics → always from GitHub
+#  Every public repo of the owners below shows up AUTOMATICALLY — create a repo
+#  on GitHub and it appears on the site at the next build (twice a day).
+#  Name, description, stars, language, topics and releases come from GitHub.
 #
-#  Smallest possible entry:
-#    - repository: rudradevpal/my-new-repo
-#
-#  Order on the page: featured first, then `order` (lower = earlier).
-#  status: active | maintenance | experimental | archived
-#  role:   creator | maintainer | contributor
+#  Skipped automatically: forks, empty repos (until you push code) and repos
+#  already listed in lab.yaml. Use `hide:` for anything else.
 # ─────────────────────────────────────────────────────────────────────────────
 
+github:
+  owners: [rudradevpal, rudractl]
+  include_forks: false
+  hide:
+    - test2
+    - python-practice
+    - sample-proj
+    - images
+    - distributed-computing-assignment1
+    - rudradevpal.github.io # old site
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  Optional: extra detail for specific repos (matched by `repository`).
+#  Everything is optional — add only what you want to change or highlight:
+#    name, description, long_description, featured: true, order (lower = earlier),
+#    status (always `active` unless you set: maintenance | experimental | archived),
+#    technologies, highlights, why / architecture / decisions / learned (Markdown).
+#  Repos from other owners can be listed here too.
+# ─────────────────────────────────────────────────────────────────────────────
+
+projects:
 - repository: rudradevpal/avron
   name: Avron
   description: >
@@ -97,7 +114,6 @@
   description: >
     Reverse SSH tunnel for a Raspberry Pi (or any Linux box) — reach your home
     server without a static IP or router port-forwarding.
-  status: maintenance
   order: 10
   technologies: [Python, SSH, Raspberry Pi]
   categories: [homelab, networking]
@@ -107,7 +123,6 @@
   description: >
     A self-built CI/CD platform on Kubernetes — Jenkins, GitLab, Kaniko builds and
     a private Docker registry with UI, on bare metal or cloud.
-  status: archived
   order: 20
   technologies: [Kubernetes, Jenkins, GitLab, Kaniko, NFS]
   categories: [devops, ci-cd]
@@ -117,7 +132,6 @@
   description: >
     An automated backup server for Kubernetes that snapshots cluster resources
     across namespaces into GitLab on a schedule.
-  status: archived
   order: 21
   technologies: [Python, Kubernetes, GitLab]
   categories: [kubernetes, backup]
@@ -127,7 +141,6 @@
   description: >
     A step-by-step procedure for adding Windows worker nodes to an existing
     Kubernetes (1.14+) cluster to run Windows containers.
-  status: archived
   order: 22
   technologies: [Kubernetes, Windows, Shell]
   categories: [kubernetes]

@@ -71,6 +71,8 @@
 @theme inline {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  /* Headings, your name and role. Swap to var(--font-sans) for a classic look. */
+  --font-heading: var(--font-mono);
 
   --color-bg: var(--bg);
   --color-bg-2: var(--bg-2);
@@ -139,9 +141,12 @@
 
   h1,
   h2,
-  h3 {
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    font-feature-settings: 'calt' 0;
     text-wrap: balance;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
   }
 
   p {

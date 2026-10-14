@@ -1,31 +1,18 @@
 import data from '../generated/github.json';
+import { normaliseCache, type AsciiAvatar, type RepoMeta } from './github-cache.ts';
 
-/** Normalised repository metadata written by `npm run fetch:github`. */
-export interface RepoMeta {
-  repository: string;
-  url: string;
-  description: string | null;
-  stars: number;
-  forks: number;
-  watchers: number;
-  openIssues: number;
-  language: string | null;
-  topics: string[];
-  license: string | null;
-  latestRelease: { tag: string; url: string; publishedAt: string } | null;
-  pushedAt: string | null;
-  homepage: string | null;
-  archived: boolean;
-  fetchedAt: string;
-}
+export type { RepoMeta, AsciiAvatar };
 
-const repos = data as Record<string, RepoMeta | undefined>;
+const cache = normaliseCache(data);
 
 /** Returns metadata, or `undefined` when GitHub data is unavailable — never throws. */
 export function getRepoMeta(repository: string): RepoMeta | undefined {
-  const meta = repos[repository.toLowerCase()];
+  const meta = cache.repos[repository.toLowerCase()];
   return meta && typeof meta.stars === 'number' ? meta : undefined;
 }
+
+/** Profile picture as coloured ASCII art, or null if it couldn't be fetched. */
+export const getAvatar = (): AsciiAvatar | null => cache.avatar;
 
 export const repoUrl = (repository: string) => `https://github.com/${repository}`;
 

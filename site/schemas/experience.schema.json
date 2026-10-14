@@ -70,6 +70,12 @@
         }
       }
     },
-    "required": ["company", "role", "start", "end", "summary"]
+    "required": [
+      "company",
+      "role",
+      "start",
+      "end",
+      "summary"
+    ]
   }
 }

@@ -41,6 +41,7 @@ export const projectSchema = z.object({
   description: nonEmpty.optional(),
   long_description: z.string().optional(),
   featured: z.boolean().default(false),
+  /** Always `active` unless set here. */
   status: z.enum(projectStatus).default('active'),
   role: z.enum(projectRoles).default('creator'),
   technologies: tags,
@@ -59,6 +60,24 @@ export const projectSchema = z.object({
   decisions: z.string().optional(),
   learned: z.string().optional(),
 });
+
+/** content/projects.yaml — discovery settings + optional per-repo details. */
+export const projectsFileSchema = z
+  .object({
+    github: z
+      .object({
+        /** GitHub users/orgs whose public repos appear automatically. */
+        owners: z.array(nonEmpty).default([]),
+        include_forks: z.boolean().default(false),
+        /** Repos to keep off the site: "repo-name" or "owner/repo-name". */
+        hide: z.array(nonEmpty).default([]),
+      })
+      .strict()
+      .default({ owners: [], include_forks: false, hide: [] }),
+    /** Optional extra detail for any repo (matched by `repository`), or repos from other owners. */
+    projects: z.array(projectSchema).nullish(),
+  })
+  .strict();
 
 /* ────────────────────────────────── Blog ─────────────────────────────── */
 
@@ -226,11 +245,11 @@ export const dataFiles = {
   'certifications.yaml': certificationsSchema,
   'skills.yaml': skillsSchema,
   'uses.yaml': usesSchema,
+  'projects.yaml': projectsFileSchema,
 } as const;
 
 /** List files under `content/` — one YAML list, one entry per item. */
 export const listFiles = {
-  'projects.yaml': projectSchema,
   'lab.yaml': labSchema,
 } as const;
 

@@ -29,15 +29,24 @@
                 },
                 "level": {
                   "type": "string",
-                  "enum": ["daily", "experienced", "exploring"]
+                  "enum": [
+                    "daily",
+                    "experienced",
+                    "exploring"
+                  ]
                 }
               },
-              "required": ["name"]
+              "required": [
+                "name"
+              ]
             }
           ]
         }
       }
     },
-    "required": ["group", "items"]
+    "required": [
+      "group",
+      "items"
+    ]
   }
 }

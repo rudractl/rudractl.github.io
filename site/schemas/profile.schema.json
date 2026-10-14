@@ -58,7 +58,10 @@
             "type": "string"
           }
         },
-        "required": ["title", "description"]
+        "required": [
+          "title",
+          "description"
+        ]
       }
     },
     "contact": {
@@ -101,7 +104,9 @@
             "type": "string"
           }
         },
-        "required": ["title"]
+        "required": [
+          "title"
+        ]
       }
     },
     "languages": {
@@ -118,7 +123,9 @@
             "type": "string"
           }
         },
-        "required": ["name"]
+        "required": [
+          "name"
+        ]
       }
     },
     "hobbies": {
@@ -166,9 +173,22 @@
           ]
         }
       },
-      "required": ["title", "description"],
+      "required": [
+        "title",
+        "description"
+      ],
       "additionalProperties": false
     }
   },
-  "required": ["name", "handle", "role", "tagline", "intro", "summary", "focus", "contact", "site"]
+  "required": [
+    "name",
+    "handle",
+    "role",
+    "tagline",
+    "intro",
+    "summary",
+    "focus",
+    "contact",
+    "site"
+  ]
 }

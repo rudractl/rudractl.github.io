@@ -35,6 +35,7 @@ interface Profile {
   skills: { group: string; items: { name: string }[] }[];
   uses: { group: string; items: { name: string; note?: string }[] }[];
   certifications: { name: string; issued: string | number }[];
+  avatar: { cols: number; rows: number; lines: string[]; colors: string[][] } | null;
 }
 interface Project {
   slug: string;
@@ -248,6 +249,7 @@ const HELP: [string, string][] = [
   ['open <path>', 'open the page for a file, post or project'],
   ['whoami', 'who is this?'],
   ['neofetch', 'system info, the fun way'],
+  ['avatar', 'my GitHub picture, in ASCII'],
   ['kubectl get …', 'projects | posts | labs | all'],
   ['search <words>', 'search everything'],
   ['contact', 'ways to reach me'],
@@ -392,23 +394,26 @@ function ls(n: Node, d: ShellData, long: boolean): string {
   );
 }
 
+/** GitHub profile picture as coloured ASCII (generated at build time). */
+function avatarArt(d: ShellData, cls = ''): string {
+  const a = d.profile.avatar;
+  if (!a) return '';
+  const rows = a.lines.map((line, y) =>
+    [...line]
+      .map((ch, x) =>
+        ch === ' ' ? ' ' : `<span style="color:${a.colors[y]?.[x] ?? 'inherit'}">${esc(ch)}</span>`,
+      )
+      .join(''),
+  );
+  return `<div class="ascii-avatar ${cls}" role="img" aria-label="${esc(d.profile.name)} — GitHub avatar as ASCII art">${rows.join('\n')}</div>`;
+}
+
 function neofetch(d: ShellData): string {
   const p = d.profile;
   const years =
     new Date().getFullYear() -
     Math.min(...p.experience.map((e) => Number(String(e.start).slice(0, 4))));
   const stars = d.projects.reduce((n, x) => n + (x.github?.stars ?? 0), 0);
-  const logo = [
-    '   ____   ',
-    '  / __ \\  ',
-    ' / /_/ /  ',
-    '/ _, _/   ',
-    '/_/ |_|   ',
-    '          ',
-    '          ',
-    '          ',
-    '          ',
-  ];
   const info = [
     `${green(esc(p.handle))}${muted('@')}${green('platform')}`,
     muted('─'.repeat(p.handle.length + 9)),
@@ -420,9 +425,15 @@ function neofetch(d: ShellData): string {
     `${green('Packages')}: ${d.projects.length} projects, ${d.posts.length} posts, ${d.labs.length} labs`,
     `${green('Stars')}: ★ ${stars}`,
     `${green('Focus')}: ${esc(p.focus.join(', '))}`,
-  ].filter(Boolean);
-  const rows = Math.max(logo.length, info.length);
-  return `<div class="overflow-x-auto"><div class="whitespace-pre">${Array.from({ length: rows }, (_, i) => green(esc(logo[i] ?? ' '.repeat(10))) + '  ' + (info[i] ?? '')).join('\n')}</div></div>`;
+    '',
+    ['#ff5f57', '#febc2e', '#28c840', '#6ea8fe', '#b197fc', '#5cd5ec']
+      .map((c) => `<span style="color:${c}">███</span>`)
+      .join(''),
+  ].filter((l, i, all) => l !== '' || i === all.length - 2);
+  const logo = p.avatar
+    ? avatarArt(d)
+    : `<div class="whitespace-pre text-accent">${esc(['   ____  ', '  / __ \\ ', ' / /_/ / ', '/ _, _/  ', '/_/ |_|  '].join('\n'))}</div>`;
+  return `<div class="flex flex-wrap items-start gap-x-5 gap-y-3">${logo}<div class="whitespace-pre-wrap">${info.join('\n')}</div></div>`;
 }
 
 let searchIndex: SearchItem[] | undefined;
@@ -482,6 +493,7 @@ const commands: Record<string, Cmd> = {
   whoami: (_, __, d) =>
     `${bold(esc(d.profile.name))} — ${green(esc(d.profile.role))}${d.profile.location ? muted(` · ${esc(d.profile.location)}`) : ''}\n${esc(d.profile.tagline.trim())}`,
   neofetch: (_, __, d) => neofetch(d),
+  avatar: (_, __, d) => avatarArt(d, 'ascii-avatar-lg') || muted('No avatar available right now.'),
   contact: (_, __, d) => catFile('contact.txt', d),
   kubectl: (args, h, d) => {
     const [verb, kind = '', name] = args;

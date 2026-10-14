@@ -38,7 +38,6 @@ const describe: [string, string | undefined][] = [
   ['Tech', data.technologies.join(' / ') || undefined],
   ['Language', meta?.language ?? undefined],
   ['License', meta?.license ?? undefined],
-  ['Updated', meta?.pushedAt ? timeAgo(meta.pushedAt) : undefined],
 ];
 const links = [
   data.links.documentation && {
@@ -164,8 +163,10 @@ const links = [
                   <dd class="mt-1 text-lg text-fg">{formatCount(meta.forks)}</dd>
                 </div>
                 <div class="rounded-lg bg-bg-2 p-3">
-                  <dt class="text-xs text-muted">watchers</dt>
-                  <dd class="mt-1 text-lg text-fg">{formatCount(meta.watchers)}</dd>
+                  <dt class="text-xs text-muted">updated</dt>
+                  <dd class="mt-1 truncate text-lg text-fg">
+                    {meta.pushedAt ? timeAgo(meta.pushedAt) : '—'}
+                  </dd>
                 </div>
                 <div class="rounded-lg bg-bg-2 p-3">
                   <dt class="text-xs text-muted">issues</dt>

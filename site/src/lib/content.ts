@@ -8,9 +8,13 @@ const SHOW_DRAFTS = !import.meta.env.PROD;
 
 export type PostEntry = CollectionEntry<'blog'> & { minutes: number | null };
 type Base<T> = Omit<T, 'data'>;
+
 /** A project with name/description resolved (YAML first, then GitHub) and GitHub stats attached. */
 export type ProjectEntry = Base<CollectionEntry<'opensource'>> & {
-  data: CollectionEntry<'opensource'>['data'] & { name: string; description: string };
+  data: CollectionEntry<'opensource'>['data'] & {
+    name: string;
+    description: string;
+  };
   meta: RepoMeta | undefined;
 };
 export type LabEntry = CollectionEntry<'lab'>;
@@ -77,6 +81,8 @@ export async function getProjects(): Promise<ProjectEntry[]> {
         Number(b.data.featured) - Number(a.data.featured) ||
         a.data.order - b.data.order ||
         statusRank[a.data.status] - statusRank[b.data.status] ||
+        // most recently pushed first, so new repos surface near the top
+        Date.parse(b.meta?.pushedAt ?? '1970') - Date.parse(a.meta?.pushedAt ?? '1970') ||
         a.data.name.localeCompare(b.data.name),
     );
 }

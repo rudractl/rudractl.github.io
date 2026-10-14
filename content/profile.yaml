@@ -8,29 +8,27 @@ name: Rudradev Pal
 handle: rudractl
 role: Senior Platform Engineer
 tagline: >
-  I build and run Kubernetes and OpenShift platforms — multi-cluster,
-  GPU-ready and automated end to end.
+  I build reliable cloud-native platforms — Kubernetes, DevOps, AI
+  infrastructure and the automation that ties them together.
 
 location: Hyderabad, India
 
 # Short intro (homepage + about hero)
 intro: >
-  10+ years building Kubernetes-based platforms across bare metal, private,
-  public and hybrid cloud — from telecom edge to GPU and AI workloads.
+  10+ years in Kubernetes, DevOps and infrastructure — building platforms
+  across bare metal, cloud and edge, from telecom networks to AI workloads.
 
-# Longer narrative for /about. Markdown is supported.
+# Longer narrative for /about (the first paragraph also appears on the homepage).
+# Keep it high level — tools and numbers belong in experience.yaml. Markdown is supported.
 summary: |
-  I've spent the last decade in the layer between hardware and the teams that
-  ship on it. Today that means building the **Kubernetes platform** (kubeadm,
-  RKE2) underneath a scale-out storage system at Nasuni, with **one-touch
-  upgrades** in Python and **GitOps delivery with Flux**.
+  I'm a platform engineer who works in the layer between infrastructure and the
+  teams that ship on it. I design and run **Kubernetes platforms**, automate
+  everything that happens more than twice, and care a lot about **reliability**.
 
-  Before that I ran **GPU-optimized Kubernetes and OpenShift** for AI and LLM
-  workloads at F5 — 24+ clusters, 355+ nodes, NVIDIA BlueField DPUs, disaster
-  recovery with Velero and Kasten, and an observability stack built on
-  Prometheus, Grafana and Thanos. Earlier stops: multi-cluster GKE with Istio at
-  Netcracker, multi-site edge OpenShift at Verizon, and Kubernetes on OpenStack
-  for NFV at TCS.
+  Over the last decade that has meant AI and GPU infrastructure, large
+  multi-cluster platforms, edge deployments for telecom, CI/CD and GitOps
+  pipelines, disaster recovery and observability — on bare metal, private,
+  public and hybrid cloud.
 
   The thread through all of it: automate the boring parts, make platforms
   reliable enough that nobody has to think about them, and write down what I
@@ -38,30 +36,30 @@ summary: |
 
 # Shown as `> item` lines in the homepage terminal
 focus:
-  - Kubernetes & OpenShift
-  - Platform Engineering
-  - AI / GPU Infrastructure
-  - Automation & GitOps
+  - Kubernetes
+  - DevOps
+  - AI Infrastructure
+  - Infrastructure & Automation
 
 # "Current engineering interests" on the homepage
 interests:
   - title: AI infrastructure
-    description: GPU-optimized Kubernetes for AI and LLM workloads, and LLM-powered ops agents.
+    description: Platforms for GPU, AI and LLM workloads — and AI agents that help run infrastructure.
     icon: k8s
-  - title: Multi-cluster platforms
-    description: Highly available Kubernetes and OpenShift across bare metal, edge and cloud.
+  - title: Kubernetes platforms
+    description: Highly available, multi-cluster platforms across bare metal, cloud and edge.
     icon: layers
-  - title: GitOps & automation
-    description: Flux, GitLab CI, Ansible and Python — one-touch upgrades with automatic rollback.
+  - title: DevOps & automation
+    description: CI/CD, GitOps and infrastructure as code — one-touch operations with safe rollback.
     icon: git
-  - title: Resilience
-    description: Disaster recovery with Velero and Kasten — RPOs measured in minutes, not hours.
+  - title: Reliability
+    description: Disaster recovery, safe upgrades and platforms that recover on their own.
     icon: shield
   - title: Observability
-    description: Prometheus, Grafana and Thanos across fleets of clusters.
+    description: Metrics, logs and alerts that explain what's happening across a fleet.
     icon: network
   - title: Homelab & self-hosting
-    description: Proxmox, TrueNAS, Traefik, Authentik and whatever I'm breaking this week.
+    description: Running real services at home — and breaking them on purpose to learn.
     icon: wrench
 
 contact:
@@ -91,7 +89,7 @@ hobbies:
 site:
   title: Rudradev Pal — Senior Platform Engineer
   description: >
-    Kubernetes, OpenShift, platform engineering and AI infrastructure.
+    Kubernetes, DevOps, AI infrastructure and automation.
     Open-source projects, engineering notes and lab experiments by Rudradev Pal.
   footer_message: Built with Astro, Git and too much YAML.
 

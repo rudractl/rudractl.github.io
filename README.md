@@ -24,27 +24,27 @@ Everything lives in `content/`. Edit a file, commit, push — the site redeploys
 | `certifications.yaml` | certifications                                                        |
 | `skills.yaml`         | grouped skills on `/about`                                            |
 | `uses.yaml`           | the `/uses` page                                                      |
-| `projects.yaml`       | open-source projects — **one line per repo is enough**                |
+| `projects.yaml`       | which GitHub repos to show/hide + optional extra detail per project   |
 | `lab.yaml`            | lab experiments                                                       |
 | `blog/*.md`           | blog posts (one file each); `blog/medium/` is imported automatically  |
 
-### Add a project
+### Projects appear automatically
 
-Add one line to `content/projects.yaml`:
+Every public repo on your GitHub accounts (`github.owners` in `content/projects.yaml`)
+shows up on `/opensource` by itself — name, description, stars, language and releases
+come from GitHub. Forks, empty repos and repos already listed in `lab.yaml` are skipped.
 
-```yaml
-- repository: rudradevpal/my-new-repo
-```
-
-Name, description, stars, forks, language, license and latest release come from GitHub.
-Add `description:`, `featured: true`, `status:`, `highlights:` or a Markdown write-up
-(`why:`, `architecture:`, `decisions:`, `learned:`) only when you want to override or add detail.
+- **Hide a repo:** add its name to `github.hide`.
+- **Add detail or change order:** list it under `projects:` — e.g. `featured: true`,
+  `description:`, `highlights:`, or a Markdown write-up (`why:`, `architecture:` …).
+- **Status** is always `active` unless you set `status:` (`maintenance`, `experimental`, `archived`).
 
 ### What updates by itself
 
-On every deploy, and daily at 08:47 IST, the build pulls:
+On every deploy, and twice a day (08:47 and 20:47 IST), the build pulls:
 
-- **GitHub stats** for every repo in `projects.yaml`
+- **Your GitHub repos** — new ones appear, stats refresh, and your profile picture is
+  re-rendered as ASCII art for the terminal (`neofetch`, `avatar`)
 - **New Medium posts** from `@rudradevpal`, which show up in the blog and link to Medium
 
 ### Optional helpers
@@ -89,9 +89,10 @@ Code layout, design notes and the original spec are in `site/` and `site/docs/Pl
 ## Deployment
 
 - **Push to `main`** → `.github/workflows/deploy.yml` validates, builds, tests and
-  deploys to GitHub Pages. Also runs daily to refresh GitHub stats and Medium posts.
+  deploys to GitHub Pages. Also runs twice a day to refresh GitHub stats and Medium posts.
 - **Pull requests** → `.github/workflows/ci.yml` runs the full check and reports on the PR.
-- **Dependabot** opens PRs for dependency updates (npm weekly, Actions monthly).
+- **Dependencies** update themselves monthly (`update-deps.yml`): minor/patch only, committed
+  straight to `main` only if the full check passes. No PRs. Major upgrades are done by hand.
 
 One-time setup: **Settings → Pages → Source: GitHub Actions**. For a custom domain,
 set a repository variable `SITE_URL` and add `site/public/CNAME`.

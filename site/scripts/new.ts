@@ -35,7 +35,7 @@ ${c.bold('rudractl content scaffolder')}
 
   npm run new                                   ${c.dim('# interactive')}
   npm run new post "Title" -- --tags k8s,cilium ${c.dim('# new file in content/blog (draft)')}
-  npm run new project owner/repo                ${c.dim('# adds to content/projects.yaml, prefilled from GitHub')}
+  npm run new project owner/repo                ${c.dim('# add details for a repo in content/projects.yaml')}
   npm run new lab "Name"                        ${c.dim('# adds to content/lab.yaml')}
 
   Options: --mdx (post as .mdx), --featured
@@ -132,10 +132,10 @@ async function newProject(repository: string) {
   if (!/^[\w.-]+\/[\w.-]+$/.test(repository)) throw new Error('Expected "owner/repo".');
 
   const file = path.join(CONTENT, 'projects.yaml');
-  const existing = ((fs.existsSync(file) ? readYaml(file) : []) ?? []) as {
-    repository: string;
-    slug?: string;
-  }[];
+  const cfg = ((fs.existsSync(file) ? readYaml(file) : {}) ?? {}) as {
+    projects?: { repository: string; slug?: string }[] | null;
+  };
+  const existing = cfg.projects ?? [];
   const id = projectId({ repository });
   if (
     existing.some(

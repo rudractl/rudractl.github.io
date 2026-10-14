@@ -168,6 +168,20 @@ const PROMPT =
     white-space: pre-wrap;
     overflow-wrap: anywhere;
   }
+  .ascii-avatar {
+    flex-shrink: 0;
+    white-space: pre;
+    font-size: clamp(0.42rem, 1.55vw, 0.6rem);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    font-weight: 700;
+    padding: 0.6rem 0.7rem;
+    border-radius: 0.5rem;
+    background: #07090c; /* always dark, so the colours read in both themes */
+  }
+  .ascii-avatar-lg {
+    font-size: clamp(0.5rem, 2vw, 0.8rem);
+  }
   .shell-out {
     padding-bottom: 0.35rem;
     color: var(--text-secondary);

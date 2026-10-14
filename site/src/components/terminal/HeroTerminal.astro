@@ -43,10 +43,8 @@ const PS1 =
 
     <div class="hero-output mt-5 space-y-5" data-hero-output>
       <div class="enter" style="--i:0">
-        <h1 class="font-sans text-4xl font-semibold tracking-tight text-fg sm:text-5xl">
-          {profile.name}
-        </h1>
-        <p class="mt-2 font-sans text-lg text-accent sm:text-xl">{profile.role}</p>
+        <h1 class="text-4xl font-bold text-fg sm:text-5xl">{profile.name}</h1>
+        <p class="mt-2 font-heading text-lg text-accent sm:text-xl">{profile.role}</p>
       </div>
       <p
         class="enter max-w-xl font-sans text-base leading-relaxed text-fg-2 sm:text-[1.0625rem]"
@@ -105,12 +103,13 @@ const PS1 =
         />
       </form>
       <p class="mt-2 text-[0.7rem] text-muted">
-        Prefer a full shell?
+        Prefer a full shell?{' '}
         <button type="button" class="link text-fg-2" data-terminal-toggle>
           enter terminal mode
         </button>
         <span class="hidden sm:inline">
-          · <kbd class="kbd">Ctrl</kbd> <kbd class="kbd">`</kbd>
+          {' · '}
+          <kbd class="kbd">Ctrl</kbd> <kbd class="kbd">`</kbd>
         </span>
       </p>
     </div>

@@ -40,6 +40,7 @@
     "reading-time": "^1.5.0",
     "satori": "^0.56.1",
     "satteri": "^0.10.3",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "yaml": "^2.9.1"
