@@ -39,3 +39,21 @@ export function plainText(markdown: string | undefined): string {
     .replace(/\s+/g, ' ')
     .trim();
 }
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+/** 2024 → "2024", "2026-06" → "Jun 2026", "2024-03-15" → "Mar 15, 2024". */
+export function formatPartialDate(value: string | number): string {
+  const [y, m, d] = String(value).split('-');
+  if (!m) return y ?? '';
+  const month = MONTHS[Number(m) - 1] ?? m;
+  return d ? `${month} ${Number(d)}, ${y}` : `${month} ${y}`;
+}
+
+/** Earliest instant a partial date refers to (or the last, with `end`). Used for sorting / expiry. */
+export function partialToDate(value: string | number, end = false): Date {
+  const [y = 1970, m, d] = String(value).split('-').map(Number);
+  if (!end) return new Date(Date.UTC(y, (m ?? 1) - 1, d ?? 1));
+  if (d) return new Date(Date.UTC(y, (m ?? 1) - 1, d, 23, 59, 59));
+  return new Date(Date.UTC(m ? y : y + 1, m ?? 0, 1) - 1);
+}

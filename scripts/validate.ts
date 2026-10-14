@@ -69,7 +69,7 @@ for (const [name, def] of Object.entries(collections)) {
       const parsed = result.data as Record<string, unknown>;
       if (name === 'blog') {
         postProjectRefs.push({ file: label, refs: (parsed['projects'] as string[]) ?? [] });
-        if (parsed['status'] === 'published' && body.trim().length < 50)
+        if (parsed['status'] === 'published' && !parsed['external_url'] && body.trim().length < 50)
           warnings.push({ file: label, messages: ['Published post has almost no content.'] });
       }
       ok++;

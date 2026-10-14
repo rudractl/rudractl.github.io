@@ -1,7 +1,5 @@
-# Optional. Delete entries (or leave the list empty: []) to hide the section.
-# TODO(rudradev): replace with your real certifications.
-- name: Certified Kubernetes Administrator (CKA)
+# issued / expires: 2024, "2024-03" or "2024-03-15". Add credential_url to link the badge (e.g. Credly).
+- name: Certified Kubernetes Application Developer (CKAD)
   issuer: The Linux Foundation / CNCF
-  issued: 2024-03-01
-  expires: 2026-03-01
+  issued: 2024
   credential_url: null

@@ -10,7 +10,7 @@ export const NAV = [
 ] as const;
 
 export interface SocialLink {
-  id: 'github' | 'linkedin' | 'email' | 'x' | 'mastodon' | 'rss';
+  id: 'github' | 'linkedin' | 'medium' | 'email' | 'x' | 'mastodon' | 'rss';
   label: string;
   href: string;
   display: string;
@@ -33,6 +33,15 @@ export function getSocialLinks({ rss = false } = {}): SocialLink[] {
       href: `https://www.linkedin.com/in/${contact.linkedin}`,
       display: `linkedin.com/in/${contact.linkedin}`,
     });
+  if (contact.medium) {
+    const user = contact.medium.replace(/^@/, '');
+    links.push({
+      id: 'medium',
+      label: 'Medium',
+      href: `https://medium.com/@${user}`,
+      display: `medium.com/@${user}`,
+    });
+  }
   if (contact.x)
     links.push({
       id: 'x',

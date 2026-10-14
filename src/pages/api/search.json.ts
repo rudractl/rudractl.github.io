@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { json } from '@/lib/api.ts';
-import { getLabs, getPosts, getProjects, getTags } from '@/lib/content.ts';
+import { getLabs, getPosts, getProjects, getTags, postUrl } from '@/lib/content.ts';
 import { getUses } from '@/lib/data.ts';
 import { formatDate, plainText } from '@/lib/format.ts';
 import { NAV } from '@/lib/site.ts';
@@ -32,7 +32,7 @@ export const GET: APIRoute = async () => {
     ...posts.map((p) => ({
       type: 'post',
       title: p.data.title,
-      url: `/blog/${p.id}/`,
+      url: postUrl(p),
       description: p.data.description.trim(),
       meta: formatDate(p.data.published),
       keywords: `${p.data.tags.join(' ')} ${plainText(p.body).slice(0, 3000)}`,

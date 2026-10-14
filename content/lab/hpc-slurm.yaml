@@ -1,0 +1,10 @@
+name: HPC Cluster with Slurm
+slug: hpc-slurm
+status: complete
+started: 2026-02
+featured: true
+technologies: [Slurm, Munge, OpenMPI, MariaDB, NFS]
+summary: >
+  Building a Slurm HPC cluster from scratch on RHEL-family Linux — login and
+  compute nodes, Munge auth, accounting with MariaDB, NFS and OpenMPI.
+repository: rudradevpal/hpc-slurm

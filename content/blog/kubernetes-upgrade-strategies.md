@@ -5,7 +5,7 @@ description: >
   In-place, blue/green or rebuild? A practical look at how to upgrade
   clusters without surprising the people running workloads on them.
 published: 2026-09-21
-status: published
+status: draft # sample written by Claude — review/rewrite before publishing
 tags:
   - Kubernetes
   - Platform Engineering

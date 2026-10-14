@@ -1,5 +1,6 @@
 ---
 import type { Experience } from '@/schemas/index.ts';
+import { formatPartialDate } from '@/lib/format.ts';
 
 interface Props {
   items: Experience;
@@ -7,7 +8,7 @@ interface Props {
 }
 const { items, limit } = Astro.props;
 const shown = limit ? items.slice(0, limit) : items;
-const fmt = (v: string | number) => String(v);
+const fmt = formatPartialDate;
 ---
 
 <ol class="timeline space-y-10">

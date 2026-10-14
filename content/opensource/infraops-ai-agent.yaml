@@ -1,0 +1,21 @@
+name: IVA — InfraOps Virtual Assistant
+slug: infraops-ai-agent
+repository: rudradevpal/infraops-ai-agent
+description: >
+  An AI-powered automation agent that helps infrastructure teams with routine
+  operations, observability and orchestration.
+long_description: >
+  IVA combines n8n workflows, LLM-enhanced commands and a secure SSH API server
+  into a self-hosted assistant for day-to-day infrastructure operations —
+  packaged with Docker Compose.
+featured: true
+status: active
+role: creator
+order: 2
+technologies: [Python, n8n, Docker, LLM]
+categories: [ai, automation]
+highlights:
+  - Workflow automation with n8n backed by PostgreSQL
+  - AI-enhanced commands and monitoring
+  - SSH API server for secure remote command execution
+  - NGINX Proxy Manager for routing and TLS, Portainer for container management

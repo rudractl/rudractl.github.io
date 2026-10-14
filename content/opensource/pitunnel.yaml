@@ -1,0 +1,11 @@
+name: PiTunnel
+slug: pitunnel
+repository: rudradevpal/PiTunnel
+description: >
+  Reverse SSH tunnel for a Raspberry Pi (or any Linux box) — reach your home
+  server without a static IP or router port-forwarding.
+status: maintenance
+role: creator
+order: 10
+technologies: [Python, SSH, Raspberry Pi]
+categories: [homelab, networking]

@@ -5,7 +5,7 @@ description: >
   Lessons learned while designing an offline Kubernetes deployment —
   registries, images, upgrades and the things that quietly need the internet.
 published: 2026-10-13
-status: published
+status: draft # sample written by Claude — review/rewrite before publishing
 tags:
   - Kubernetes
   - RKE2

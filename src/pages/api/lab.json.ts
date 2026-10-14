@@ -10,7 +10,7 @@ export const GET: APIRoute = async ({ site }) =>
       status: data.status,
       summary: data.summary.trim(),
       technologies: data.technologies,
-      started: data.started?.toISOString() ?? null,
+      started: data.started ?? null,
       repository: data.repository ?? null,
       url: absolute(`/lab/${id}/`, site),
     })),

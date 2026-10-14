@@ -2,7 +2,7 @@
 import Icon from '../Icon.astro';
 import { formatDate, isoDate, plainText } from '@/lib/format.ts';
 import type { PostEntry } from '@/lib/content.ts';
-import { tagSlug } from '@/lib/content.ts';
+import { postUrl, tagSlug } from '@/lib/content.ts';
 
 interface Props {
   post: PostEntry;
@@ -13,7 +13,10 @@ interface Props {
 
 const { post, filterable = false, headingLevel: H = 'h3' } = Astro.props;
 const { data } = post;
-const href = `/blog/${post.id}/`;
+const href = postUrl(post);
+const external = data.external_url
+  ? new URL(data.external_url).hostname.replace(/^www\./, '')
+  : null;
 const isDraft = data.status === 'draft';
 const searchText = filterable
   ? `${data.title} ${data.description} ${data.tags.join(' ')} ${plainText(post.body).slice(0, 4000)}`.toLowerCase()
@@ -28,13 +31,27 @@ const searchText = filterable
 >
   <div class="flex items-center gap-3 font-mono text-xs text-muted sm:flex-col sm:items-start sm:gap-1.5 sm:pt-1">
     <time datetime={isoDate(data.published)}>{formatDate(data.published)}</time>
-    <span class="inline-flex items-center gap-1">
-      <Icon name="clock" size={12} /> {post.minutes} min read
-    </span>
+    {post.minutes && (
+      <span class="inline-flex items-center gap-1">
+        <Icon name="clock" size={12} /> {post.minutes} min read
+      </span>
+    )}
+    {external && (
+      <span class="inline-flex items-center gap-1 text-accent-2">
+        <Icon name="external" size={12} /> {external}
+      </span>
+    )}
   </div>
   <div>
     <H class="text-lg font-semibold tracking-tight text-fg sm:text-xl">
-      <a href={href} class="transition-colors after:absolute after:inset-0 group-hover:text-accent">
+      <a
+        href={href}
+        class="transition-colors after:absolute after:inset-0 group-hover:text-accent"
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener' : undefined}
+        data-track={external ? 'external_post' : undefined}
+        data-track-label={external ? post.id : undefined}
+      >
         {data.title}
       </a>
       {isDraft && <span class="chip ml-2 align-middle !text-warning">draft</span>}

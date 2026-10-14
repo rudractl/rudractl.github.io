@@ -2,7 +2,7 @@
 import TerminalWindow from './TerminalWindow.astro';
 import Icon from '../Icon.astro';
 import { getProfile, getUses } from '@/lib/data.ts';
-import { getLabs, getPosts, getProjects } from '@/lib/content.ts';
+import { getLabs, getPosts, getProjects, postUrl } from '@/lib/content.ts';
 import { getSocialLinks } from '@/lib/site.ts';
 
 const profile = getProfile();
@@ -24,7 +24,7 @@ const termData = {
   })),
   posts: posts.slice(0, 6).map((p) => ({
     title: p.data.title,
-    href: `/blog/${p.id}/`,
+    href: postUrl(p),
     date: p.data.published.toISOString().slice(0, 10),
   })),
   labs: labs.map((l) => ({ name: l.data.name, href: `/lab/${l.id}/`, status: l.data.status })),

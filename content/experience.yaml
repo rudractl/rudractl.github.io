@@ -1,34 +1,102 @@
 # Professional timeline — newest first.
-# `end` can be a year (2025), a month (2025-06) or `present`.
-# TODO(rudradev): replace these entries with your real roles.
+# Dates: 2024, "2024-05" or "2024-05-12". `end` can also be `present`.
+# Keep it public-safe: no internal hostnames, IPs, customer names or private architecture.
 
-- company: Independent / Open Source
-  role: Platform Engineer
-  start: 2024
+- company: Nasuni
+  role: Senior Platform Engineer
+  start: 2026-06
   end: present
+  location: Hyderabad, India
   summary: >
-    Building Kubernetes platforms, infrastructure automation and
-    developer tooling — and writing about it in public.
+    Building and operating the Kubernetes platform that underpins a scale-out
+    storage system, on bare metal and virtualized environments.
+  highlights:
+    - Driving scale-out storage modernization on Kubernetes (kubeadm, RKE2) across bare metal and virtualized environments
+    - Built Python automation for one-touch Kubernetes upgrades — pre-flight validation, rolling upgrades and automated rollback
+    - Implemented GitOps with Flux for declarative, version-controlled delivery of platform and storage components
   areas:
     - Kubernetes
-    - Platform Engineering
-    - Infrastructure Automation
-  highlights:
-    - Designed air-gapped RKE2 clusters with private registries and offline upgrades
-    - GitOps delivery with FluxCD across multiple environments
-    - Reusable OpenTofu modules and Ansible roles for bare-metal and VMware
+    - RKE2
+    - Flux
+    - Python
 
-- company: Infrastructure Team
-  role: DevOps Engineer
-  start: 2022
-  end: 2024
+- company: F5 Networks
+  role: Senior Cloud Infrastructure Engineer
+  start: 2023-05
+  end: 2026-05
+  location: Hyderabad, India
   summary: >
-    Owned CI/CD, container platforms and Linux infrastructure for
-    product teams shipping to production every day.
-  areas:
-    - CI/CD
-    - Containers
-    - Linux
+    Architected and operated GPU-optimized Kubernetes and OpenShift platforms for
+    large-scale AI and LLM workloads across bare metal and cloud.
   highlights:
-    - Moved services from VMs to containers and then to Kubernetes
-    - Built shared pipelines that cut build times significantly
+    - Owned architecture and lifecycle of highly available Kubernetes and OpenShift — 24+ clusters, 355+ nodes
+    - Designed multi-architecture platforms integrated with NVIDIA BlueField DPUs
+    - Led an AI-driven automation agent for infrastructure provisioning, cutting manual effort by ~40%
+    - Disaster recovery with Velero and Kasten, taking RPOs from hours to under 30 minutes
+    - Automation with Python, Bash, Ansible, GitLab CI, GitOps and Jenkins — ~50% less operational effort
+    - Centralized observability with Prometheus, Grafana and Thanos
+    - Standardized container runtimes, CNI and CSI for high-throughput, low-latency data workloads
+  areas:
+    - Kubernetes
+    - OpenShift
+    - GPU / AI
+    - Disaster Recovery
+    - Observability
+
+- company: Netcracker Technology
+  role: DevOps Engineer
+  start: 2021-11
+  end: 2023-04
+  location: Hyderabad, India
+  summary: >
+    Ran large-scale microservices on Google Kubernetes Engine with a focus on
+    reliability, secure multi-tenancy and safe releases.
+  highlights:
+    - Multi-cluster GKE environments with Istio service mesh for secure service-to-service traffic
+    - CI/CD pipelines with progressive delivery — Blue/Green and Canary releases
+    - Multi-tenancy with namespaces, network policies and RBAC
+    - Tuned clusters with HPA, node autoscaling and resource right-sizing
+  areas:
+    - GKE
+    - Istio
+    - CI/CD
+    - Multi-tenancy
+
+- company: Verizon
+  role: Cloud & DevOps Engineer
+  start: 2019-07
+  end: 2021-11
+  location: Hyderabad, India
+  summary: >
+    Designed and maintained multi-site, highly available OpenShift clusters for
+    latency-sensitive edge workloads.
+  highlights:
+    - Cross-cluster connectivity with Skupper and Submariner
+    - Event-driven autoscaling with KEDA
+    - Migrated CI/CD from Jenkins to GitLab CI for Edge Discovery Services
+    - Automated VNF, CNF and network-slice deployment on OpenStack with Ansible
+    - Observability with Prometheus, Grafana and the ELK stack
+  areas:
+    - OpenShift
+    - Edge Computing
+    - KEDA
+    - OpenStack
+
+- company: Tata Consultancy Services
+  role: System Engineer
+  start: 2016-07
+  end: 2019-06
+  location: Hyderabad, India
+  summary: >
+    Deployed Kubernetes on Red Hat OpenStack and migrated legacy services to
+    containers in a telecom NFV environment.
+  highlights:
+    - Kubernetes clusters on Red Hat OpenStack for production and pre-production
+    - Automated backup-and-restore disaster recovery for Kubernetes workloads
+    - Python IPv4 packet-inspection modules for NFV performance work
+    - Aligned deployments with 3GPP and ETSI NFV standards
+  areas:
+    - Kubernetes
+    - OpenStack
+    - NFV
+    - Python

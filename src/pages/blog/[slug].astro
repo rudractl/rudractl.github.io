@@ -4,13 +4,13 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Icon from '@/components/Icon.astro';
 import TableOfContents from '@/components/blog/TableOfContents.astro';
 import ProjectCard from '@/components/opensource/ProjectCard.astro';
-import { getPosts, getProjects, tagSlug, type PostEntry } from '@/lib/content.ts';
+import { getLocalPosts, getProjects, postUrl, tagSlug, type PostEntry } from '@/lib/content.ts';
 import { formatDate, isoDate } from '@/lib/format.ts';
 import { editUrl } from '@/lib/site.ts';
 import { getProfile } from '@/lib/data.ts';
 
 export async function getStaticPaths() {
-  const posts = await getPosts();
+  const posts = await getLocalPosts();
   return posts.map((post, i) => ({
     params: { slug: post.id },
     // posts are newest-first: "next" is newer, "prev" is older
@@ -81,7 +81,7 @@ const jsonLd = {
           <p class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.8125rem] text-muted">
             <time datetime={isoDate(data.published)}>{formatDate(data.published)}</time>
             <span aria-hidden="true">·</span>
-            <span>{post.minutes} min read</span>
+            {post.minutes && <span>{post.minutes} min read</span>}
             {data.updated && (
               <>
                 <span aria-hidden="true">·</span>
@@ -114,7 +114,7 @@ const jsonLd = {
                   {p.id === post.id ? (
                     p.data.title
                   ) : (
-                    <a class="link" href={`/blog/${p.id}/`}>
+                    <a class="link" href={postUrl(p)}>
                       {p.data.title}
                     </a>
                   )}

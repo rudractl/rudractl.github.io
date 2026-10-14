@@ -1,0 +1,9 @@
+name: TLS for Kubernetes Ingress
+slug: k8s-ingress-letsencrypt
+status: complete
+started: 2019-09
+technologies: [Kubernetes, cert-manager, "Let's Encrypt"]
+summary: >
+  Securing Kubernetes Ingress with cert-manager and free Let's Encrypt
+  certificates, including automatic renewal.
+repository: rudradevpal/k8s-ingress-letsencrypt

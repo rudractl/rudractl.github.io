@@ -52,6 +52,7 @@ test('drafts never reach production', { skip }, () => {
     .readdirSync('content/blog')
     .filter(
       (f) =>
+        /\.mdx?$/.test(f) &&
         !f.startsWith('_') &&
         /status:\s*draft/.test(fs.readFileSync(path.join('content/blog', f), 'utf8')),
     );

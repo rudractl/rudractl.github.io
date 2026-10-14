@@ -61,7 +61,7 @@ test('skills and uses accept plain strings or objects', () => {
     { group: 'G', items: ['Go', { name: 'Rust', level: 'exploring' }] },
   ]);
   assert.deepEqual(skills[0]?.items, [
-    { name: 'Go', level: 'experienced' },
+    { name: 'Go', level: undefined },
     { name: 'Rust', level: 'exploring' },
   ]);
   const uses = usesSchema.parse([{ group: 'G', items: ['zsh', { name: 'k9s', note: 'nice' }] }]);

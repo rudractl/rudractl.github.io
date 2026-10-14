@@ -28,7 +28,6 @@
                   "minLength": 1
                 },
                 "level": {
-                  "default": "experienced",
                   "type": "string",
                   "enum": ["daily", "experienced", "exploring"]
                 }

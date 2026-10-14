@@ -5,7 +5,7 @@ description: >
   How this portfolio uses YAML, Markdown, Zod schemas and GitHub Actions to
   behave like a tiny platform — and why adding content takes one file.
 published: 2026-10-14
-status: published
+status: draft # sample written by Claude — review/rewrite before publishing
 tags:
   - Platform Engineering
   - GitOps

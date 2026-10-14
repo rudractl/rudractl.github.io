@@ -59,6 +59,10 @@
     },
     "cover": {
       "type": "string"
+    },
+    "external_url": {
+      "type": "string",
+      "format": "uri"
     }
   },
   "required": ["title", "description", "published"]

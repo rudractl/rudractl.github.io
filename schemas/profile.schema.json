@@ -75,6 +75,9 @@
           "format": "email",
           "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
         },
+        "medium": {
+          "type": "string"
+        },
         "x": {
           "type": "string"
         },
@@ -82,6 +85,48 @@
           "type": "string",
           "format": "uri"
         }
+      }
+    },
+    "achievements": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "issuer": {
+            "type": "string"
+          }
+        },
+        "required": ["title"]
+      }
+    },
+    "languages": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "level": {
+            "type": "string"
+          }
+        },
+        "required": ["name"]
+      }
+    },
+    "hobbies": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
       }
     },
     "site": {

@@ -1,35 +1,41 @@
 # /uses — tools I reach for. Items are names, or { name, note }.
 
-- group: Infrastructure
+- group: Platform
   items:
     - Kubernetes
-    - RKE2
-    - { name: Terraform / OpenTofu, note: modules over copy-paste }
+    - OpenShift
+    - { name: RKE2 / kubeadm, note: bare-metal clusters }
+    - { name: k3s, note: small and edge clusters }
+    - { name: Flux, note: GitOps delivery }
+
+- group: Automation
+  items:
     - Ansible
-    - Helm
-    - { name: FluxCD, note: GitOps all the things }
-
-- group: Containers
-  items:
-    - Docker
-    - containerd
-    - { name: Harbor, note: private registry for air-gapped installs }
-
-- group: Systems
-  items:
-    - Linux
-    - { name: Rocky Linux, note: default server distro }
-
-- group: Development
-  items:
-    - Go
     - Python
     - Bash
+    - GitLab CI
+    - GitHub Actions
+    - { name: n8n, note: workflow automation + AI agents }
+
+- group: Observability
+  items:
+    - Prometheus
+    - Grafana
+    - { name: Thanos, note: long-term, multi-cluster metrics }
+
+- group: Homelab
+  items:
+    - { name: Proxmox, note: hypervisor }
+    - XCP-ng
+    - { name: TrueNAS, note: storage }
+    - { name: Traefik, note: reverse proxy + TLS }
+    - { name: Authentik / Keycloak, note: identity }
+    - { name: NetBird, note: WireGuard mesh VPN }
+    - Raspberry Pi
 
 - group: Daily Environment
   items:
+    - { name: zsh, note: + starship prompt — see my dotfiles }
     - macOS
-    - { name: VS Code, note: with the Kubernetes and YAML extensions }
-    - Git
-    - { name: zsh, note: + starship prompt }
-    - { name: k9s, note: the best way to look at a cluster }
+    - Ubuntu
+    - Kali Linux

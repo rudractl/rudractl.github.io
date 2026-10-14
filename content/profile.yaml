@@ -5,70 +5,92 @@
 
 name: Rudradev Pal
 handle: rudractl
-role: Platform & Infrastructure Engineer
+role: Senior Platform Engineer
 tagline: >
-  I build Kubernetes platforms, infrastructure automation
-  and reliable distributed systems.
+  I build and run Kubernetes and OpenShift platforms — multi-cluster,
+  GPU-ready and automated end to end.
 
-location: India
-availability: Open to interesting platform engineering conversations
+location: Hyderabad, India
 
 # Short intro (homepage + about hero)
 intro: >
-  I enjoy building reliable infrastructure, Kubernetes platforms and
-  automation that makes infrastructure easier to operate.
+  10+ years building Kubernetes-based platforms across bare metal, private,
+  public and hybrid cloud — from telecom edge to GPU and AI workloads.
 
 # Longer narrative for /about. Markdown is supported.
 summary: |
-  Most of my work lives in the layer between application teams and the
-  machines they run on. I design and operate **Kubernetes platforms**, write
-  the automation that provisions them, and spend a lot of time thinking about
-  how to make that layer boring — in the best possible way.
+  I've spent the last decade in the layer between hardware and the teams that
+  ship on it. Today that means building the **Kubernetes platform** (kubeadm,
+  RKE2) underneath a scale-out storage system at Nasuni, with **one-touch
+  upgrades** in Python and **GitOps delivery with Flux**.
 
-  I care about declarative configuration, reproducible builds and systems
-  that explain themselves when they fail. If a task is done twice, I want it
-  in Git; if it is done three times, I want it automated.
+  Before that I ran **GPU-optimized Kubernetes and OpenShift** for AI and LLM
+  workloads at F5 — 24+ clusters, 355+ nodes, NVIDIA BlueField DPUs, disaster
+  recovery with Velero and Kasten, and an observability stack built on
+  Prometheus, Grafana and Thanos. Earlier stops: multi-cluster GKE with Istio at
+  Netcracker, multi-site edge OpenShift at Verizon, and Kubernetes on OpenStack
+  for NFV at TCS.
 
-  Outside of work I run a home lab, break clusters on purpose, and write
-  about what I learn along the way.
+  The thread through all of it: automate the boring parts, make platforms
+  reliable enough that nobody has to think about them, and write down what I
+  learn along the way.
 
 # Shown as `> item` lines in the homepage terminal
 focus:
-  - Kubernetes
+  - Kubernetes & OpenShift
   - Platform Engineering
-  - Infrastructure
-  - Automation
+  - AI / GPU Infrastructure
+  - Automation & GitOps
 
 # "Current engineering interests" on the homepage
 interests:
-  - title: Kubernetes internals
-    description: Controllers, scheduling, upgrades and what really happens during a rollout.
+  - title: AI infrastructure
+    description: GPU-optimized Kubernetes for AI and LLM workloads, and LLM-powered ops agents.
     icon: k8s
-  - title: Platform engineering
-    description: Golden paths, self-service infrastructure and developer experience.
+  - title: Multi-cluster platforms
+    description: Highly available Kubernetes and OpenShift across bare metal, edge and cloud.
     icon: layers
-  - title: GitOps
-    description: Flux, declarative delivery and treating Git as the control plane.
+  - title: GitOps & automation
+    description: Flux, GitLab CI, Ansible and Python — one-touch upgrades with automatic rollback.
     icon: git
-  - title: Networking
-    description: eBPF, Cilium, service meshes and debugging packets at 2am.
-    icon: network
-  - title: Air-gapped systems
-    description: Shipping clusters to places the internet cannot reach.
+  - title: Resilience
+    description: Disaster recovery with Velero and Kasten — RPOs measured in minutes, not hours.
     icon: shield
-  - title: Infrastructure as code
-    description: Terraform / OpenTofu modules and Ansible that age well.
-    icon: code
+  - title: Observability
+    description: Prometheus, Grafana and Thanos across fleets of clusters.
+    icon: network
+  - title: Homelab & self-hosting
+    description: Proxmox, TrueNAS, Traefik, Authentik and whatever I'm breaking this week.
+    icon: wrench
 
 contact:
-  github: rudractl
-  # linkedin: your-linkedin-handle
-  email: ________@example.com
+  github: rudradevpal
+  linkedin: rudradevpal
+  email: rudradev.pal@gmail.com
+  medium: rudradevpal
+
+achievements:
+  - title: BeF5 Award
+    issuer: F5 Networks
+  - title: Excellence Award
+    issuer: Verizon
+  - title: Star of the Month
+    issuer: Tata Consultancy Services
+
+languages:
+  - { name: Bengali, level: Native }
+  - { name: English, level: Professional }
+  - { name: Hindi, level: Professional }
+
+hobbies:
+  - Photography
+  - Homelab & self-hosting
+  - Technical blogging
 
 site:
-  title: Rudradev Pal — Platform & Infrastructure Engineer
+  title: Rudradev Pal — Senior Platform Engineer
   description: >
-    Kubernetes, platform engineering and infrastructure automation.
+    Kubernetes, OpenShift, platform engineering and AI infrastructure.
     Open-source projects, engineering notes and lab experiments by Rudradev Pal.
   footer_message: Built with Astro, Git and too much YAML.
 
@@ -77,7 +99,7 @@ site:
   analytics:
     # Google Analytics 4 → analytics.google.com → Admin → Data streams → Web
     # Dashboard + official iOS/Android app ("Google Analytics").
-    google_analytics: G-KXYT8BWQLK
+    # google_analytics: G-XXXXXXXXXX
     # Microsoft Clarity → clarity.microsoft.com → Settings → Overview → Project ID
     # Heatmaps + session replays.
     # clarity: abcd1234ef

@@ -1,5 +1,5 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
-import { getLabs, getPosts, getProjects } from '@/lib/content.ts';
+import { getLabs, getLocalPosts, getProjects } from '@/lib/content.ts';
 import { getProfile } from '@/lib/data.ts';
 import { renderOgImage, type OgCard } from '@/lib/og.ts';
 
@@ -7,7 +7,7 @@ type Card = Omit<OgCard, 'author' | 'role' | 'site'>;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const profile = getProfile();
-  const [posts, projects, labs] = await Promise.all([getPosts(), getProjects(), getLabs()]);
+  const [posts, projects, labs] = await Promise.all([getLocalPosts(), getProjects(), getLabs()]);
   const cards: { route: string; card: Card }[] = [
     {
       route: 'default',

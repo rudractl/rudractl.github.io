@@ -18,6 +18,11 @@ const url = z.url();
 const nonEmpty = z.string().trim().min(1);
 const date = z.coerce.date();
 const tags = z.array(nonEmpty).default([]);
+/** A year (2024), month ("2024-03") or full date ("2024-03-15") — résumé-style precision. */
+export const partialDate = z.union([
+  z.number().int().min(1900).max(2100),
+  z.string().regex(/^\d{4}(-\d{2}(-\d{2})?)?$/, 'Use YYYY, YYYY-MM or YYYY-MM-DD.'),
+]);
 
 /* ───────────────────────────── Open source ───────────────────────────── */
 
@@ -72,6 +77,8 @@ export const postSchema = z.object({
   /** Slugs of related open-source projects — cross-linked on both pages. */
   projects: z.array(slug).default([]),
   cover: z.string().optional(),
+  /** Published elsewhere (e.g. Medium)? Listings link straight there and no local page is built. */
+  external_url: url.optional(),
 });
 
 /* ────────────────────────────────── Lab ──────────────────────────────── */
@@ -85,7 +92,7 @@ export const labSchema = z.object({
   technologies: tags,
   summary: nonEmpty,
   repository: z.string().nullish(),
-  started: date.optional(),
+  started: partialDate.optional(),
   featured: z.boolean().default(false),
   /** Free-form Markdown notes when the lab is a YAML file (Markdown labs use the body). */
   notes: z.string().optional(),
@@ -110,9 +117,14 @@ export const profileSchema = z.object({
     github: z.string().optional(),
     linkedin: z.string().optional(),
     email: z.email().optional(),
+    medium: z.string().optional(),
     x: z.string().optional(),
     mastodon: url.optional(),
   }),
+  achievements: z.array(z.object({ title: nonEmpty, issuer: z.string().optional() })).default([]),
+  languages: z.array(z.object({ name: nonEmpty, level: z.string().optional() })).default([]),
+  /** Life outside the terminal. */
+  hobbies: tags,
   site: z
     .object({
       title: nonEmpty,
@@ -136,14 +148,12 @@ export const profileSchema = z.object({
     .strict(),
 });
 
-const yearOrMonth = z.union([z.number().int(), z.string().regex(/^\d{4}(-\d{2})?$/)]);
-
 export const experienceSchema = z.array(
   z.object({
     company: nonEmpty,
     role: nonEmpty,
-    start: yearOrMonth,
-    end: z.union([yearOrMonth, z.literal('present')]),
+    start: partialDate,
+    end: z.union([partialDate, z.literal('present')]),
     location: z.string().optional(),
     summary: nonEmpty,
     areas: tags,
@@ -156,8 +166,8 @@ export const educationSchema = z.array(
     institution: nonEmpty,
     degree: nonEmpty,
     field: z.string().optional(),
-    start: yearOrMonth.optional(),
-    end: yearOrMonth.optional(),
+    start: partialDate.optional(),
+    end: z.union([partialDate, z.literal('present')]).optional(),
     notes: z.string().optional(),
   }),
 );
@@ -166,8 +176,8 @@ export const certificationsSchema = z.array(
   z.object({
     name: nonEmpty,
     issuer: nonEmpty,
-    issued: date,
-    expires: date.nullish(),
+    issued: partialDate,
+    expires: partialDate.nullish(),
     credential_url: url.nullish(),
   }),
 );
@@ -181,8 +191,11 @@ export const skillsSchema = z.array(
     items: z
       .array(
         z.union([
-          nonEmpty.transform((name) => ({ name, level: 'experienced' as const })),
-          z.object({ name: nonEmpty, level: z.enum(skillLevels).default('experienced') }),
+          nonEmpty.transform((name) => ({
+            name,
+            level: undefined as (typeof skillLevels)[number] | undefined,
+          })),
+          z.object({ name: nonEmpty, level: z.enum(skillLevels).optional() }),
         ]),
       )
       .min(1),

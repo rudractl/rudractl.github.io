@@ -1,11 +1,12 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import readingTime from 'reading-time';
 import { getRepoMeta, type RepoMeta } from './github.ts';
+import { partialToDate } from './format.ts';
 
 /** Drafts are visible in `npm run dev` and never shipped to production. */
 const SHOW_DRAFTS = !import.meta.env.PROD;
 
-export type PostEntry = CollectionEntry<'blog'> & { minutes: number };
+export type PostEntry = CollectionEntry<'blog'> & { minutes: number | null };
 export type ProjectEntry = CollectionEntry<'opensource'> & { meta: RepoMeta | undefined };
 export type LabEntry = CollectionEntry<'lab'>;
 
@@ -19,11 +20,22 @@ export async function getPosts(): Promise<PostEntry[]> {
     .map((p) => ({
       ...p,
       minutes:
-        p.data.reading_time === 'auto'
-          ? Math.max(1, Math.round(readingTime(p.body ?? '').minutes))
-          : p.data.reading_time,
+        p.data.reading_time !== 'auto'
+          ? p.data.reading_time
+          : p.data.external_url
+            ? null // body is just a stub — the real length lives elsewhere
+            : Math.max(1, Math.round(readingTime(p.body ?? '').minutes)),
     }))
     .sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
+}
+
+/** Where a post lives: its own page, or the external site it was published on. */
+export const postUrl = (post: { id: string; data: { external_url?: string | undefined } }) =>
+  post.data.external_url ?? `/blog/${post.id}/`;
+
+/** Posts that get a page on this site (external ones link out instead). */
+export async function getLocalPosts(): Promise<PostEntry[]> {
+  return (await getPosts()).filter((p) => !p.data.external_url);
 }
 
 export async function getTags(): Promise<{ tag: string; slug: string; count: number }[]> {
@@ -68,7 +80,8 @@ export async function getLabs(): Promise<LabEntry[]> {
   return labs.sort(
     (a, b) =>
       labRank[a.data.status] - labRank[b.data.status] ||
-      (b.data.started?.valueOf() ?? 0) - (a.data.started?.valueOf() ?? 0) ||
+      (b.data.started ? partialToDate(b.data.started).valueOf() : 0) -
+        (a.data.started ? partialToDate(a.data.started).valueOf() : 0) ||
       a.data.name.localeCompare(b.data.name),
   );
 }

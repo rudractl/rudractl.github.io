@@ -10,7 +10,7 @@ import LabTable from '@/components/lab/LabTable.astro';
 import ContactBlock from '@/components/portfolio/ContactBlock.astro';
 import Icon, { type IconName } from '@/components/Icon.astro';
 import { getExperience, getProfile, getSkills } from '@/lib/data.ts';
-import { getLabs, getPosts, getProjects } from '@/lib/content.ts';
+import { getLabs, getPosts, getProjects, postUrl } from '@/lib/content.ts';
 import { formatDate } from '@/lib/format.ts';
 
 const profile = getProfile();
@@ -124,7 +124,7 @@ const firstParagraph = profile.summary.split(/\n\s*\n/)[0]?.replace(/\*\*/g, '')
             {latestPost && (
               <li class="flex gap-3">
                 <Icon name="book" size={15} class="mt-0.5 text-accent" />
-                <a class="link" href={`/blog/${latestPost.id}/`}>
+                <a class="link" href={postUrl(latestPost)}>
                   {latestPost.data.title}
                 </a>
               </li>

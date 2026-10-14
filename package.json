@@ -12,6 +12,7 @@
     "new": "node scripts/new.ts",
     "validate": "node scripts/validate.ts",
     "fetch:github": "node scripts/fetch-github.ts",
+    "import:medium": "node scripts/import-medium.ts",
     "schemas": "node scripts/gen-schemas.ts",
     "typecheck": "astro check",
     "lint": "prettier --check . && markdownlint-cli2",

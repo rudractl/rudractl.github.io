@@ -1,7 +1,7 @@
 name: Deploy
 
 # main → production. Also rebuilds daily so GitHub stats (stars, releases)
-# stay fresh without anyone committing anything.
+# and new Medium posts show up without anyone committing anything.
 on:
   push:
     branches: [main]
@@ -35,6 +35,9 @@ jobs:
 
       - name: Validate content
         run: npm run validate
+
+      - name: Import new Medium posts
+        run: npm run import:medium
 
       - name: Fetch GitHub metadata
         run: npm run fetch:github

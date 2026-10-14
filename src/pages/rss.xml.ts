@@ -1,6 +1,6 @@
 import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
-import { getPosts } from '@/lib/content.ts';
+import { getPosts, postUrl } from '@/lib/content.ts';
 import { getProfile } from '@/lib/data.ts';
 
 export const GET: APIRoute = async ({ site }) => {
@@ -14,7 +14,7 @@ export const GET: APIRoute = async ({ site }) => {
       title: post.data.title,
       description: post.data.description.trim(),
       pubDate: post.data.published,
-      link: `/blog/${post.id}/`,
+      link: postUrl(post),
       categories: post.data.tags,
     })),
     customData: '<language>en</language>',

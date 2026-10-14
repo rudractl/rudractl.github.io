@@ -15,7 +15,7 @@ import {
   getSkills,
 } from '@/lib/data.ts';
 import { renderMarkdown } from '@/lib/markdown.ts';
-import { formatDate } from '@/lib/format.ts';
+import { formatPartialDate, partialToDate } from '@/lib/format.ts';
 
 const profile = getProfile();
 const experience = getExperience();
@@ -70,7 +70,7 @@ const now = new Date();
         <SectionHeading
           command="rudractl skills --grouped"
           title="Skills & Technologies"
-          description="Grouped by area. No percentage bars — just how often I work with each."
+          description="Grouped by area — no percentage bars."
         />
         <SkillGroups groups={skills} />
       </section>
@@ -102,7 +102,12 @@ const now = new Date();
                     <p class="mt-1 text-sm text-fg-2">{e.institution}</p>
                     {(e.start || e.end) && (
                       <p class="mt-1 font-mono text-xs text-muted">
-                        {e.start} — {e.end}
+                        {e.start && `${formatPartialDate(e.start)} — `}
+                        {e.end === 'present' ? (
+                          <span class="text-accent">in progress</span>
+                        ) : (
+                          e.end && formatPartialDate(e.end)
+                        )}
                       </p>
                     )}
                     {e.notes && <p class="mt-2 text-sm text-muted">{e.notes}</p>}
@@ -117,7 +122,7 @@ const now = new Date();
             <SectionHeading command="rudractl certs" title="Certifications" />
             <ul class="space-y-4">
               {certifications.map((c) => {
-                const expired = c.expires ? c.expires < now : false;
+                const expired = c.expires ? partialToDate(c.expires, true) < now : false;
                 return (
                   <li class="card reveal flex gap-4 p-5">
                     <Icon name="award" size={18} class="mt-0.5 text-accent" />
@@ -133,11 +138,11 @@ const now = new Date();
                       </h3>
                       <p class="mt-1 text-sm text-fg-2">{c.issuer}</p>
                       <p class="mt-1 font-mono text-xs text-muted">
-                        issued {formatDate(c.issued)}
+                        issued {formatPartialDate(c.issued)}
                         {c.expires && (
                           <span class={expired ? 'text-warning' : ''}>
                             {' '}
-                            · {expired ? 'expired' : 'valid until'} {formatDate(c.expires)}
+                            · {expired ? 'expired' : 'valid until'} {formatPartialDate(c.expires)}
                           </span>
                         )}
                       </p>
@@ -145,6 +150,59 @@ const now = new Date();
                   </li>
                 );
               })}
+            </ul>
+          </div>
+        )}
+      </section>
+    )}
+
+    <!-- Achievements, languages, life outside work -->
+    {(profile.achievements.length > 0 ||
+      profile.languages.length > 0 ||
+      profile.hobbies.length > 0) && (
+      <section class="mt-24 grid gap-5 md:grid-cols-3">
+        {profile.achievements.length > 0 && (
+          <div class="card reveal p-5">
+            <h2 class="font-mono text-sm font-medium text-fg">
+              <span class="text-accent">#</span> achievements
+            </h2>
+            <ul class="mt-4 space-y-3">
+              {profile.achievements.map((a) => (
+                <li class="flex gap-3 text-sm">
+                  <Icon name="award" size={16} class="mt-0.5 text-accent" />
+                  <span>
+                    <span class="text-fg">{a.title}</span>
+                    {a.issuer && <span class="block text-muted">{a.issuer}</span>}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {profile.languages.length > 0 && (
+          <div class="card reveal p-5">
+            <h2 class="font-mono text-sm font-medium text-fg">
+              <span class="text-accent">#</span> languages
+            </h2>
+            <dl class="mt-4 grid grid-cols-[1fr_auto] gap-y-2.5 text-sm">
+              {profile.languages.map((l) => (
+                <>
+                  <dt class="text-fg">{l.name}</dt>
+                  <dd class="font-mono text-xs text-muted">{l.level}</dd>
+                </>
+              ))}
+            </dl>
+          </div>
+        )}
+        {profile.hobbies.length > 0 && (
+          <div class="card reveal p-5">
+            <h2 class="font-mono text-sm font-medium text-fg">
+              <span class="text-accent">#</span> off-duty
+            </h2>
+            <ul class="mt-4 flex flex-wrap gap-1.5">
+              {profile.hobbies.map((h) => (
+                <li class="chip">{h}</li>
+              ))}
             </ul>
           </div>
         )}

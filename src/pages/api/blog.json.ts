@@ -1,19 +1,20 @@
 import type { APIRoute } from 'astro';
 import { absolute, json } from '@/lib/api.ts';
-import { getPosts } from '@/lib/content.ts';
+import { getPosts, postUrl } from '@/lib/content.ts';
 
 export const GET: APIRoute = async ({ site }) =>
   json(
-    (await getPosts()).map(({ id, data, minutes }) => ({
-      slug: id,
-      title: data.title,
-      description: data.description.trim(),
-      published: data.published.toISOString(),
-      updated: data.updated?.toISOString() ?? null,
-      tags: data.tags,
-      series: data.series ?? null,
-      featured: data.featured,
-      reading_time: minutes,
-      url: absolute(`/blog/${id}/`, site),
+    (await getPosts()).map((post) => ({
+      slug: post.id,
+      title: post.data.title,
+      description: post.data.description.trim(),
+      published: post.data.published.toISOString(),
+      updated: post.data.updated?.toISOString() ?? null,
+      tags: post.data.tags,
+      series: post.data.series ?? null,
+      featured: post.data.featured,
+      reading_time: post.minutes,
+      url: absolute(postUrl(post), site),
+      external: Boolean(post.data.external_url),
     })),
   );

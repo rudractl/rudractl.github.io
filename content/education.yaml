@@ -1,6 +1,11 @@
-# TODO(rudradev): replace with your real education.
-- institution: Your University
+- institution: BITS Pilani
+  degree: M.Tech
+  field: Cloud Computing
+  end: present
+
+- institution: MAKAUT (formerly WBUT)
   degree: B.Tech
   field: Computer Science & Engineering
-  start: 2018
-  end: 2022
+  start: 2012-08
+  end: 2016-06
+  notes: 'CGPA: 8.07'

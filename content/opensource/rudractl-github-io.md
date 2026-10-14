@@ -5,10 +5,10 @@ repository: rudractl/rudractl.github.io
 description: >
   This website. A Git-driven portfolio where content is declarative YAML and
   Markdown, validated with schemas and shipped by GitHub Actions.
-featured: true
+featured: false
 status: active
 role: creator
-order: 2
+order: 5
 technologies:
   - Astro
   - TypeScript

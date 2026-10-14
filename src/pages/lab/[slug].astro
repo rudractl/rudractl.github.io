@@ -4,7 +4,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Icon from '@/components/Icon.astro';
 import { getLabs, hasBody, type LabEntry } from '@/lib/content.ts';
 import { renderMarkdown } from '@/lib/markdown.ts';
-import { formatDate } from '@/lib/format.ts';
+import { formatPartialDate } from '@/lib/format.ts';
 import { editUrl } from '@/lib/site.ts';
 import { repoUrl } from '@/lib/github.ts';
 
@@ -45,7 +45,9 @@ const repo = data.repository
           <span class="chip">{t}</span>
         ))}
         {data.started && (
-          <span class="ml-1 font-mono text-xs text-muted">started {formatDate(data.started)}</span>
+          <span class="ml-1 font-mono text-xs text-muted">
+            started {formatPartialDate(data.started)}
+          </span>
         )}
       </div>
       {repo && (
