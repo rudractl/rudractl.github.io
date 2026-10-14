@@ -71,8 +71,10 @@
 @theme inline {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  /* Headings, your name and role. Swap to var(--font-sans) for a classic look. */
-  --font-heading: var(--font-mono);
+  /* Font roles — swap any of these to var(--font-sans) for a classic look. */
+  --font-body: var(--font-mono); /* everything: UI, cards, descriptions */
+  --font-heading: var(--font-mono); /* headings, name, role */
+  --font-prose: var(--font-sans); /* long-form reading: blog posts, project write-ups */
 
   --color-bg: var(--bg);
   --color-bg-2: var(--bg-2);
@@ -101,8 +103,9 @@
   html {
     background: var(--bg);
     color: var(--text-primary);
-    font-family: var(--font-sans);
-    font-feature-settings: 'cv11', 'ss01', 'ss03';
+    font-family: var(--font-body);
+    font-feature-settings: 'calt' 0;
+    letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     scroll-padding-top: 5rem;
@@ -492,6 +495,9 @@
 
 /* ── Long-form content ── */
 .prose-site {
+  font-family: var(--font-prose);
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
+  letter-spacing: normal;
   --tw-prose-body: var(--text-secondary);
   --tw-prose-headings: var(--text-primary);
   --tw-prose-lead: var(--text-secondary);
@@ -511,6 +517,14 @@
   max-width: 70ch;
   font-size: 1.0625rem;
   line-height: 1.75;
+}
+/* Short write-ups (about, project and lab pages) use the console font too */
+.prose-site.prose-console {
+  font-family: var(--font-body);
+  font-feature-settings: 'calt' 0;
+  letter-spacing: -0.01em;
+  font-size: 0.95rem;
+  line-height: 1.8;
 }
 .prose-site :where(a):not(.heading-anchor) {
   text-decoration-color: rgb(var(--accent-rgb) / 0.5);

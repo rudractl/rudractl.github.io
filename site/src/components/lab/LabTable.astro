@@ -35,9 +35,7 @@ const { labs, showTech = true } = Astro.props;
               <Icon name="flask" size={14} class="text-muted group-hover:text-accent" />
               {lab.data.name}
             </a>
-            <p class="mt-1 font-sans text-[0.8125rem] leading-relaxed text-muted">
-              {lab.data.summary}
-            </p>
+            <p class="mt-1 text-[0.8125rem] leading-relaxed text-muted">{lab.data.summary}</p>
           </td>
           {showTech && (
             <td class="hidden text-muted md:table-cell">

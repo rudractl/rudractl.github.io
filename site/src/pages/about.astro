@@ -38,7 +38,7 @@ const now = new Date();
         <Prompt command="rudractl profile" short="profile" />
         <h1 class="mt-5 text-3xl font-bold text-fg sm:text-4xl">{profile.name}</h1>
         <p class="mt-2 font-heading text-lg text-accent">{profile.role}</p>
-        <p class="mt-4 font-sans leading-relaxed text-fg-2">{profile.intro}</p>
+        <p class="mt-4 leading-relaxed text-fg-2">{profile.intro}</p>
         <dl class="mt-5 grid grid-cols-[6rem_1fr] gap-y-2 text-[0.8125rem]">
           {profile.location && (
             <>
@@ -58,7 +58,7 @@ const now = new Date();
         <p class="eyebrow mb-4">
           <span class="prompt">$</span> cat README.md
         </p>
-        <div class="prose prose-site" set:html={summary} />
+        <div class="prose prose-site prose-console" set:html={summary} />
       </div>
     </section>
 

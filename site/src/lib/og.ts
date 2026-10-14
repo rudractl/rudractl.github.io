@@ -146,7 +146,13 @@ export async function renderOgImage(card: OgCard): Promise<Buffer> {
               card.subtitle
                 ? h(
                     'div',
-                    { fontSize: 26, color: C.muted, lineHeight: 1.4, maxWidth: 940 },
+                    {
+                      fontFamily: 'JetBrains Mono',
+                      fontSize: 22,
+                      color: C.muted,
+                      lineHeight: 1.45,
+                      maxWidth: 960,
+                    },
                     clip(card.subtitle, 130),
                   )
                 : h('div', {}),

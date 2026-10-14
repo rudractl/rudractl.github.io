@@ -22,7 +22,7 @@
   items:
     - Prometheus
     - Grafana
-    - { name: Thanos, note: long-term, multi-cluster metrics }
+    - { name: Thanos, note: "long-term, multi-cluster metrics" }
 
 - group: Homelab
   items:

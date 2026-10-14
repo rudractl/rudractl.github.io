@@ -59,7 +59,7 @@ const repo = data.repository
     </header>
 
     {notes || Content ? (
-      <div class="prose prose-site enter mt-10" style="--i:2">
+      <div class="prose prose-site prose-console enter mt-10" style="--i:2">
         {notes && <Fragment set:html={notes} />}
         {Content && <Content />}
       </div>

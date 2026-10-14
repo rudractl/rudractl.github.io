@@ -113,7 +113,7 @@ const links = [
           </section>
         )}
 
-        <div class="prose prose-site">
+        <div class="prose prose-site prose-console">
           {sections.map((s) => (
             <section>
               <h2>{s.title}</h2>
@@ -164,7 +164,7 @@ const links = [
                 </div>
                 <div class="rounded-lg bg-bg-2 p-3">
                   <dt class="text-xs text-muted">updated</dt>
-                  <dd class="mt-1 truncate text-lg text-fg">
+                  <dd class="mt-1 text-base leading-snug text-fg">
                     {meta.pushedAt ? timeAgo(meta.pushedAt) : '—'}
                   </dd>
                 </div>
