@@ -137,7 +137,8 @@ export const profileSchema = z.object({
   contact: z.object({
     github: z.string().optional(),
     linkedin: z.string().optional(),
-    email: z.email().optional(),
+    /** A real address, or a mask like "****" to keep the field but hide it from the site. */
+    email: z.union([z.email(), z.string().regex(/^\*+$/, 'Use a real email address or a mask like "****".')]).optional(),
     medium: z.string().optional(),
     x: z.string().optional(),
     mastodon: url.optional(),

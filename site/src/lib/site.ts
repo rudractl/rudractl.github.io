@@ -16,6 +16,10 @@ export interface SocialLink {
   display: string;
 }
 
+/** The public email address, or undefined when it's missing or masked ("****"). */
+export const publicEmail = (email: string | undefined) =>
+  email && !/^\*+$/.test(email) ? email : undefined;
+
 export function getSocialLinks({ rss = false } = {}): SocialLink[] {
   const { contact } = getProfile();
   const links: SocialLink[] = [];
@@ -56,12 +60,13 @@ export function getSocialLinks({ rss = false } = {}): SocialLink[] {
       href: contact.mastodon,
       display: contact.mastodon.replace(/^https?:\/\//, ''),
     });
-  if (contact.email)
+  const email = publicEmail(contact.email);
+  if (email)
     links.push({
       id: 'email',
       label: 'Email',
-      href: `mailto:${contact.email}`,
-      display: contact.email,
+      href: `mailto:${email}`,
+      display: email,
     });
   if (rss) links.push({ id: 'rss', label: 'RSS', href: '/rss.xml', display: '/rss.xml' });
   return links;
