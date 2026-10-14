@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../site/schemas/certifications.schema.json
 # issued / expires: 2024, "2024-03" or "2024-03-15". Add credential_url to link the badge (e.g. Credly).
 - name: Certified Kubernetes Application Developer (CKAD)
   issuer: The Linux Foundation / CNCF

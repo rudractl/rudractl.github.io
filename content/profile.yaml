@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../site/schemas/profile.schema.json
 # ─────────────────────────────────────────────────────────────
 #  Who you are. Everything on the site that talks about "me"
 #  reads from this file. Edit, commit, push — done.

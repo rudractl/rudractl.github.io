@@ -1,0 +1,175 @@
+---
+/**
+ * Terminal mode — an optional, full-screen shell over the whole site.
+ * Toggle: the >_ button in the header, Ctrl+` , or the command palette.
+ * The choice persists across pages (localStorage) until switched off.
+ */
+import Icon from './Icon.astro';
+
+// One string so formatters can't insert whitespace between the spans.
+const PROMPT =
+  '<span class="ps1">visitor@rudractl</span><span class="text-muted">:</span><span class="ps1-path" data-tm-path>~</span><span class="ps1">$&nbsp;</span>';
+---
+
+<section
+  id="terminal-mode"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Terminal mode"
+  class="fixed inset-0 z-70 justify-center bg-bg/85 backdrop-blur-md sm:p-6"
+>
+  <div class="term flex h-full w-full max-w-5xl flex-col rounded-none sm:rounded-[0.9rem]">
+    <div class="term-bar">
+      <div class="term-dots" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <span class="truncate">visitor@rudractl — rudractl-sh</span>
+      <span class="ml-auto hidden items-center gap-1.5 sm:flex">
+        <kbd class="kbd">Ctrl</kbd>
+        <kbd class="kbd">`</kbd>
+      </span>
+      <button
+        type="button"
+        class="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border border-border-strong px-2 py-1 text-fg-2 hover:border-accent/60 hover:text-fg max-sm:ml-auto"
+        data-terminal-toggle
+        aria-label="Exit terminal mode"
+      >
+        <Icon name="close" size={12} /> GUI mode
+      </button>
+    </div>
+    <div class="term-body flex-1 overflow-y-auto text-[0.8125rem] sm:text-sm" data-tm-scroll>
+      <div data-tm-log aria-live="polite" class="space-y-1"></div>
+      <form class="mt-1 flex items-center" data-tm-form>
+        <label for="tm-input" class="sr-only">
+          Terminal command — type help
+        </label>
+        <span class="shrink-0 whitespace-nowrap" aria-hidden="true" set:html={PROMPT} />
+        <input
+          id="tm-input"
+          data-tm-input
+          type="text"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          enterkeyhint="go"
+          class="w-full min-w-0 bg-transparent text-fg caret-accent outline-none"
+        />
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { mountShell } from '@/scripts/shell/ui.ts';
+  import { track } from '@/scripts/analytics.ts';
+
+  const root = document.documentElement;
+  const panel = document.querySelector<HTMLElement>('#terminal-mode')!;
+  const toggles = () => document.querySelectorAll<HTMLElement>('[data-terminal-toggle]');
+  let shell: ReturnType<typeof mountShell> | undefined;
+  let returnFocus: HTMLElement | null = null;
+
+  const setPressed = (on: boolean) =>
+    toggles().forEach(
+      (t) => t.hasAttribute('aria-pressed') && t.setAttribute('aria-pressed', String(on)),
+    );
+  const remember = (on: boolean) => {
+    try {
+      localStorage.setItem('terminal-mode', on ? 'on' : 'off');
+    } catch {
+      /* ignore */
+    }
+  };
+
+  function ensureShell() {
+    if (shell) return shell;
+    shell = mountShell({
+      form: panel.querySelector('[data-tm-form]')!,
+      input: panel.querySelector('[data-tm-input]')!,
+      log: panel.querySelector('[data-tm-log]')!,
+      path: panel.querySelector('[data-tm-path]'),
+      scroller: panel.querySelector('[data-tm-scroll]'),
+      storageKey: 'rudractl-sh',
+      exit: () => close(),
+      source: 'terminal-mode',
+    });
+    if (!shell.hasHistory()) {
+      void shell.run('neofetch').then(() => shell?.run('help'));
+    }
+    return shell;
+  }
+
+  function open() {
+    returnFocus = document.activeElement as HTMLElement | null;
+    root.classList.add('term-mode');
+    remember(true);
+    setPressed(true);
+    ensureShell().focus();
+    track('terminal_mode', { state: 'on' });
+  }
+
+  function close() {
+    root.classList.remove('term-mode');
+    remember(false);
+    setPressed(false);
+    (
+      returnFocus ?? document.querySelector<HTMLElement>('[data-terminal-toggle][aria-pressed]')
+    )?.focus();
+    track('terminal_mode', { state: 'off' });
+  }
+
+  const toggle = () => (root.classList.contains('term-mode') ? close() : open());
+
+  document.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('[data-terminal-toggle]')) toggle();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.code === 'Backquote') {
+      e.preventDefault();
+      toggle();
+    } else if (e.key === 'Escape' && root.classList.contains('term-mode')) {
+      e.preventDefault();
+      close();
+    }
+  });
+  // Click anywhere in the terminal to type (but let links and text selection work)
+  panel.querySelector('[data-tm-scroll]')?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a, button') || window.getSelection()?.toString()) return;
+    shell?.focus();
+  });
+  // Expose for the command palette
+  window.addEventListener('rudractl:terminal', toggle);
+
+  // Restored from a previous page (class set before paint in <head>)
+  if (root.classList.contains('term-mode')) {
+    setPressed(true);
+    ensureShell().focus();
+  }
+</script>
+
+<style is:global>
+  #terminal-mode {
+    display: none;
+  }
+  .term-mode #terminal-mode {
+    display: flex;
+  }
+  .term-mode body {
+    overflow: hidden;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .term-mode #terminal-mode > .term {
+      animation: rise 0.22s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+  }
+  .shell-line {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .shell-out {
+    padding-bottom: 0.35rem;
+    color: var(--text-secondary);
+  }
+</style>

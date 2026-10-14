@@ -1,0 +1,147 @@
+---
+import TerminalWindow from './TerminalWindow.astro';
+import Icon from '../Icon.astro';
+import { getProfile } from '@/lib/data.ts';
+
+const profile = getProfile();
+const command = `${profile.handle} whoami`;
+// One string so formatters can't insert whitespace between the spans.
+const PS1 =
+  '<span class="hidden sm:inline"><span class="ps1">rudra@platform</span><span class="text-muted">:</span><span class="ps1-path">~</span></span><span class="ps1">$&nbsp;</span>';
+---
+
+<TerminalWindow
+  title={`${profile.handle} — zsh — 80×24`}
+  class="relative"
+  bodyClass="min-h-[22rem]"
+>
+  <span slot="bar" class="ml-auto hidden items-center gap-1.5 sm:flex">
+    <span class="status status-active">online</span>
+  </span>
+
+  <script is:inline>
+    // Animate once per session, only when motion is welcome. Runs before paint.
+    (() => {
+      try {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (sessionStorage.getItem('hero-typed')) return;
+        const root = document.documentElement;
+        root.classList.add('hero-typing');
+        // Safety net: never keep content hidden if the script fails to load.
+        setTimeout(() => root.classList.remove('hero-typing'), 2500);
+      } catch {}
+    })();
+  </script>
+  <div data-hero>
+    <p class="font-mono">
+      <span set:html={PS1} />
+      <span class="text-fg" data-type-target data-text={command}>
+        {command}
+      </span>
+      <span class="cursor hero-type-cursor" aria-hidden="true"></span>
+    </p>
+
+    <div class="hero-output mt-5 space-y-5" data-hero-output>
+      <div class="enter" style="--i:0">
+        <h1 class="font-sans text-4xl font-semibold tracking-tight text-fg sm:text-5xl">
+          {profile.name}
+        </h1>
+        <p class="mt-2 font-sans text-lg text-accent sm:text-xl">{profile.role}</p>
+      </div>
+      <p
+        class="enter max-w-xl font-sans text-base leading-relaxed text-fg-2 sm:text-[1.0625rem]"
+        style="--i:1"
+      >
+        {profile.tagline}
+      </p>
+      <ul class="enter grid gap-0.5 text-fg-2" style="--i:2" aria-label="Focus areas">
+        {profile.focus.map((item) => (
+          <li>
+            <span class="text-accent">&gt;</span> {item}
+          </li>
+        ))}
+      </ul>
+      <div class="enter flex flex-wrap gap-3 pt-1" style="--i:3">
+        <a
+          href="/opensource/"
+          class="btn btn-primary"
+          data-track="hero_cta"
+          data-track-label="opensource"
+        >
+          <Icon name="code" size={15} /> Explore Open Source
+        </a>
+        <a href="/blog/" class="btn" data-track="hero_cta" data-track-label="blog">
+          <Icon name="book" size={15} /> Read Blog
+        </a>
+      </div>
+    </div>
+
+    <div
+      class="hero-output mt-6 border-t border-dashed border-border pt-4 text-[0.8125rem]"
+      data-term
+    >
+      <div
+        data-term-log
+        aria-live="polite"
+        class="max-h-72 space-y-1 overflow-y-auto empty:hidden"
+      ></div>
+      <form class="flex items-center" data-term-form>
+        <label for="term-input" class="sr-only">
+          Optional terminal — type help
+        </label>
+        <span class="ps1 shrink-0" aria-hidden="true">
+          $&nbsp;
+        </span>
+        <input
+          id="term-input"
+          data-term-input
+          type="text"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          enterkeyhint="go"
+          placeholder="try 'help' or 'neofetch'"
+          class="w-full min-w-0 bg-transparent text-fg caret-accent outline-none placeholder:text-muted/80"
+        />
+      </form>
+      <p class="mt-2 text-[0.7rem] text-muted">
+        Prefer a full shell?
+        <button type="button" class="link text-fg-2" data-terminal-toggle>
+          enter terminal mode
+        </button>
+        <span class="hidden sm:inline">
+          · <kbd class="kbd">Ctrl</kbd> <kbd class="kbd">`</kbd>
+        </span>
+      </p>
+    </div>
+  </div>
+</TerminalWindow>
+
+<script>
+  import { typeIntro } from '@/scripts/hero.ts';
+  import { mountShell } from '@/scripts/shell/ui.ts';
+
+  typeIntro();
+  const form = document.querySelector<HTMLFormElement>('[data-term-form]');
+  const input = document.querySelector<HTMLInputElement>('[data-term-input]');
+  const log = document.querySelector<HTMLElement>('[data-term-log]');
+  if (form && input && log) mountShell({ form, input, log, source: 'hero' });
+</script>
+
+<style is:global>
+  .hero-type-cursor {
+    display: none;
+  }
+  .hero-typing .hero-type-cursor {
+    display: inline-block;
+  }
+  .hero-typing [data-type-target] {
+    visibility: hidden;
+  }
+  .hero-typing [data-type-target][data-typing] {
+    visibility: visible;
+  }
+  .hero-typing .hero-output {
+    display: none;
+  }
+</style>

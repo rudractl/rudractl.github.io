@@ -1,0 +1,133 @@
+# yaml-language-server: $schema=../site/schemas/projects.schema.json
+# ─────────────────────────────────────────────────────────────────────────────
+#  Open-source projects → /opensource
+#
+#  The ONLY required field is `repository`. Everything else is optional:
+#    name, description  → taken from GitHub if you leave them out
+#    stars, forks, release, license, language, topics → always from GitHub
+#
+#  Smallest possible entry:
+#    - repository: rudradevpal/my-new-repo
+#
+#  Order on the page: featured first, then `order` (lower = earlier).
+#  status: active | maintenance | experimental | archived
+#  role:   creator | maintainer | contributor
+# ─────────────────────────────────────────────────────────────────────────────
+
+- repository: rudradevpal/avron
+  name: Avron
+  description: >
+    A self-hosted gateway that strips personal data from outbound LLM traffic —
+    your prompts reach the model, your customers' data doesn't.
+  long_description: >
+    Avron finds personal data in outbound LLM requests, swaps each value for a
+    stable stand-in the model can still reason about, and puts the real values
+    back in the reply. One OpenAI-compatible endpoint, no client changes.
+  featured: true
+  order: 1
+  technologies: [Python, LLM, Privacy, Self-hosted]
+  categories: [ai, security]
+  highlights:
+    - Stable stand-ins per data type — name tags, format-preserving lookalikes or masked tails
+    - Drop-in OpenAI-compatible endpoint — no application changes
+    - Real values never leave your infrastructure
+
+- repository: rudradevpal/infraops-ai-agent
+  name: IVA — InfraOps Virtual Assistant
+  description: >
+    An AI-powered automation agent that helps infrastructure teams with routine
+    operations, observability and orchestration.
+  long_description: >
+    IVA combines n8n workflows, LLM-enhanced commands and a secure SSH API server
+    into a self-hosted assistant for day-to-day infrastructure operations —
+    packaged with Docker Compose.
+  featured: true
+  order: 2
+  technologies: [Python, n8n, Docker, LLM]
+  categories: [ai, automation]
+  highlights:
+    - Workflow automation with n8n backed by PostgreSQL
+    - AI-enhanced commands and monitoring
+    - SSH API server for secure remote command execution
+    - NGINX Proxy Manager for routing and TLS, Portainer for container management
+
+- repository: rudradevpal/devops-homelab
+  name: DevOps HomeLab
+  description: >
+    The complete configuration for my self-hosted DevOps homelab — routing,
+    identity, private networking, monitoring and remote access.
+  featured: true
+  order: 3
+  technologies: [Docker, Traefik, Authentik, Keycloak, NetBird]
+  categories: [homelab, infrastructure]
+  highlights:
+    - Traefik reverse proxy with TLS termination and OIDC forward auth
+    - Centralized identity with Authentik, Keycloak and OpenLDAP
+    - WireGuard mesh networking with NetBird and Netmaker
+    - Apache Guacamole for clientless remote access
+
+- repository: rudractl/rudractl.github.io
+  name: rudractl.github.io
+  description: >
+    This website. A Git-driven portfolio where content is declarative YAML and
+    Markdown, validated with schemas and shipped by GitHub Actions.
+  order: 5
+  technologies: [Astro, TypeScript, Tailwind CSS, GitHub Actions]
+  categories: [web, platform]
+  highlights:
+    - Git is the CMS — no admin panel, no database
+    - Schema-validated content that fails CI when it's wrong
+    - GitHub stats and Medium posts pulled in automatically at build time
+  why: |
+    A portfolio should not just _say_ "platform engineer" — it should behave like
+    one. This site treats content the way I treat infrastructure: declarative
+    files, a schema, a pipeline and an automated rollout.
+  architecture: |
+    ```text
+    content/*.yaml, *.md ──► schemas ──► Astro build ──► GitHub Pages
+                                ▲             ▲
+                         npm run validate   GitHub API · Medium RSS
+    ```
+  decisions: |
+    - **Static first.** Pages ship as HTML; JavaScript only where it earns its place.
+    - **Build-time data** with a committed cache, so builds never break when an API is down.
+
+- repository: rudradevpal/PiTunnel
+  name: PiTunnel
+  description: >
+    Reverse SSH tunnel for a Raspberry Pi (or any Linux box) — reach your home
+    server without a static IP or router port-forwarding.
+  status: maintenance
+  order: 10
+  technologies: [Python, SSH, Raspberry Pi]
+  categories: [homelab, networking]
+
+- repository: rudradevpal/cicd-platform
+  name: CI/CD Platform
+  description: >
+    A self-built CI/CD platform on Kubernetes — Jenkins, GitLab, Kaniko builds and
+    a private Docker registry with UI, on bare metal or cloud.
+  status: archived
+  order: 20
+  technologies: [Kubernetes, Jenkins, GitLab, Kaniko, NFS]
+  categories: [devops, ci-cd]
+
+- repository: rudradevpal/kubekeep
+  name: KubeKeep
+  description: >
+    An automated backup server for Kubernetes that snapshots cluster resources
+    across namespaces into GitLab on a schedule.
+  status: archived
+  order: 21
+  technologies: [Python, Kubernetes, GitLab]
+  categories: [kubernetes, backup]
+
+- repository: rudradevpal/k8s-windows-node
+  name: Kubernetes Windows Worker Nodes
+  description: >
+    A step-by-step procedure for adding Windows worker nodes to an existing
+    Kubernetes (1.14+) cluster to run Windows containers.
+  status: archived
+  order: 22
+  technologies: [Kubernetes, Windows, Shell]
+  categories: [kubernetes]

@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../site/schemas/lab.schema.json
+# ─────────────────────────────────────────────────────────────────────────────
+#  Lab experiments → /lab
+#
+#  Required: name, summary.   status: planned | active | complete | paused
+#  started: 2026, "2026-02" or "2026-02-14"
+#  repository: "owner/repo" or a full URL (optional)
+#  notes: |  ← optional Markdown write-up shown on the experiment's page
+# ─────────────────────────────────────────────────────────────────────────────
+
+- name: HPC Cluster with Slurm
+  status: complete
+  started: 2026-02
+  featured: true
+  technologies: [Slurm, Munge, OpenMPI, MariaDB, NFS]
+  summary: >
+    Building a Slurm HPC cluster from scratch on RHEL-family Linux — login and
+    compute nodes, Munge auth, accounting with MariaDB, NFS and OpenMPI.
+  repository: rudradevpal/hpc-slurm
+
+- name: n8n + Evolution API
+  slug: n8n-evo
+  status: active
+  started: 2026-05
+  featured: true
+  technologies: [n8n, Evolution API, PostgreSQL, Redis, Docker]
+  summary: >
+    A self-hosted n8n and Evolution API stack (PostgreSQL, Redis) on Docker
+    Compose for AI-driven messaging workflows.
+  repository: rudradevpal/n8n-evo
+
+- name: TLS for Kubernetes Ingress
+  status: complete
+  started: 2019-09
+  technologies: [Kubernetes, cert-manager, "Let's Encrypt"]
+  summary: >
+    Securing Kubernetes Ingress with cert-manager and free Let's Encrypt
+    certificates, including automatic renewal.
+  repository: rudradevpal/k8s-ingress-letsencrypt
+
+- name: Redis Cluster on Kubernetes
+  status: complete
+  started: 2019-07
+  technologies: [Redis, Kubernetes, Shell]
+  summary: >
+    Scripts to deploy and scale out a Redis cluster on Kubernetes.
+  repository: rudradevpal/redis-on-kubernetes

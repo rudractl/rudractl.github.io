@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../site/schemas/uses.schema.json
 # /uses — tools I reach for. Items are names, or { name, note }.
 
 - group: Platform

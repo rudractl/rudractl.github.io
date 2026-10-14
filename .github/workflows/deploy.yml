@@ -18,6 +18,10 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+defaults:
+  run:
+    working-directory: site
+
 jobs:
   build:
     name: Build
@@ -27,8 +31,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version-file: site/.nvmrc
           cache: npm
+          cache-dependency-path: site/package-lock.json
 
       - name: Install
         run: npm ci
@@ -36,18 +41,11 @@ jobs:
       - name: Validate content
         run: npm run validate
 
-      - name: Import new Medium posts
-        run: npm run import:medium
-
-      - name: Fetch GitHub metadata
-        run: npm run fetch:github
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Astro
+      - name: Build (pulls fresh GitHub stats + new Medium posts first)
         run: npm run build
         # SITE_URL: set a repository variable to use a custom domain
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io', github.repository_owner) }}
 
       - name: Test
@@ -57,7 +55,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: site/dist
 
   deploy:
     name: Deploy to GitHub Pages

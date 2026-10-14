@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../site/schemas/education.schema.json
 - institution: BITS Pilani
   degree: M.Tech
   field: Cloud Computing

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../site/schemas/skills.schema.json
 # Grouped skills for /about — no percentage bars, ever.
 # Items are plain names, or { name, level } where level is daily | experienced | exploring.
 # (Levels are optional — the legend only appears once you use them.)

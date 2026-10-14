@@ -1,8 +1,0 @@
-name: Redis Cluster on Kubernetes
-slug: redis-on-kubernetes
-status: complete
-started: 2019-07
-technologies: [Redis, Kubernetes, Shell]
-summary: >
-  Scripts to deploy and scale out a Redis cluster on Kubernetes.
-repository: rudradevpal/redis-on-kubernetes
